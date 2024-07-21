@@ -1,7 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env"); // 2번코드
+
+  await Supabase.initialize(
+    url: dotenv.get('SUPABASE_URL'),
+    anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -105,12 +117,24 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            SupaEmailAuth(
+              redirectTo: kIsWeb ? null : 'io.mydomain.myapp://callback',
+              onSignInComplete: (response) {},
+              onSignUpComplete: (response) {},
+              onError: (error) => SnackBar(content: Text(error.toString())),
+              metadataFields: [
+                MetaDataField(
+                  prefixIcon: const Icon(Icons.person),
+                  label: 'Username',
+                  key: 'username',
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return 'Please enter something';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
           ],
         ),
