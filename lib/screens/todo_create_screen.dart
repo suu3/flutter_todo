@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/constants/routes.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/widgets/category_button.dart';
 import 'package:flutter_todo/screens/todo_list_screen.dart';
+import 'package:flutter_todo/widgets/category_button.dart';
+import 'package:go_router/go_router.dart';
+
+import '../service/auth.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -66,6 +70,19 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create New Todo'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final supabaseService = AuthService();
+              await supabaseService.signOut();
+
+              if (context.mounted) {
+                context.go(Routes.signIn);
+              }
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
