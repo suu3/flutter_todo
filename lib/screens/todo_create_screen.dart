@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/constants/routes.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/providers/todo_list.dart';
 import 'package:flutter_todo/screens/todo_list_screen.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
@@ -78,7 +78,7 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               await supabaseService.signOut();
 
               if (context.mounted) {
-                context.go(Routes.signIn);
+                context.go(routes.signIn);
               }
             },
           ),

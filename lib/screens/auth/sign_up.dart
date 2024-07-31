@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/constants/routes.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/utils/validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -121,13 +121,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  context.go(Routes.signIn);
+                  context.go(routes.signIn);
                 },
                 child: const Text('로그인'),
               ),
               TextButton(
                 onPressed: () {
-                  context.go(Routes.findPassword);
+                  context.go(routes.findPassword);
                 },
                 child: const Text('비밀번호 찾기'),
               ),

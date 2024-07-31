@@ -10,8 +10,8 @@ import 'package:flutter_todo/service/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_todo/constants/routes.dart'; //TODO : routes.붙여서 관리
-import 'constants/auth.dart'; //TODO: as Auth 붙여서 관리
+import 'constants/routes.dart' as routes;
+import 'constants/auth.dart' as auth;
 import 'util.dart';
 
 Future<void> main() async {
@@ -31,29 +31,29 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final GoRouter _router = GoRouter(
-    initialLocation: Routes.signIn,
+    initialLocation: routes.signIn,
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
-      return redirectBySession(state.uri.toString(), session);
+      return auth.redirectBySession(state.uri.toString(), session);
     },
     routes: [
       GoRoute(
-        path: Routes.home,
+        path: routes.home,
         builder: (context, state) {
           final String? welcomeMessage = state.extra as String?;
           return const TodoCreateScreen();
         },
       ),
       GoRoute(
-        path: Routes.signIn,
+        path: routes.signIn,
         builder: (context, state) => const SignInScreen(),
       ),
       GoRoute(
-        path: Routes.signUp,
+        path: routes.signUp,
         builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
-        path: Routes.findPassword,
+        path: routes.findPassword,
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
     ],

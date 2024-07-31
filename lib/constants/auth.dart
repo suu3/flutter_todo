@@ -1,13 +1,13 @@
-import 'package:flutter_todo/constants/routes.dart';
+import './routes.dart' as routes;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const List<String> authRoutes = [
-  Routes.signIn,
-  Routes.signUp,
-  Routes.findPassword,
+  routes.signIn,
+  routes.signUp,
+  routes.findPassword,
 ];
 
-const String mainEndpoint = Routes.home;
+const String mainEndpoint = routes.home;
 
 bool isAuthRoute(String uri) {
   return authRoutes.contains(uri);
@@ -15,14 +15,12 @@ bool isAuthRoute(String uri) {
 
 String? redirectBySession(String uri, Session? session) {
   if (session == null) {
-    // Not logged in, redirect to login page if trying to access a protected route
     if (!isAuthRoute(uri)) {
-      return Routes.signIn;
+      return routes.signIn;
     }
   } else {
-    // Logged in, redirect to home if trying to access auth pages
     if (isAuthRoute(uri)) {
-      return Routes.home;
+      return routes.home;
     }
   }
   return null;

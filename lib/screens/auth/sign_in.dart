@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/constants/routes.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
         final Session? session = res.session;
         // print("session, $session, $mounted");
         if (session != null && mounted) {
-          context.go(Routes.home); //, extra: '환영합니다!');
+          context.go(routes.home); //, extra: '환영합니다!');
         }
       } on AuthException catch (error) {
         String errorMessage = "로그인 중 오류가 발생했습니다: ${error.message}";
@@ -157,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: () {
-                            context.go(Routes.signUp);
+                            context.go(routes.signUp);
                           },
                           child: const Text(
                             '회원가입',
@@ -166,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.go(Routes.findPassword);
+                            context.go(routes.findPassword);
                           },
                           child: const Text(
                             '비밀번호 찾기',
