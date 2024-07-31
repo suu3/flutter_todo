@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -22,42 +21,15 @@ class _SignInScreenState extends State<SignInScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      try {
-        final AuthResponse res = await supabase.auth.signInWithPassword(
-          email: _email,
-          password: _password,
-        );
-        final Session? session = res.session;
-        // print("session, $session, $mounted");
-        if (session != null && mounted) {
-          context.go(routes.home); //, extra: '환영합니다!');
-        }
-      } on AuthException catch (error) {
-        String errorMessage = "로그인 중 오류가 발생했습니다: ${error.message}";
+      final AuthResponse res = await supabase.auth.signInWithPassword(
+        email: _email,
+        password: _password,
+      );
 
-        if (error.statusCode == '400') {
-          errorMessage = "존재하지 않는 계정입니다.";
-        }
+      final Session? session = res.session;
 
-        Fluttertoast.showToast(
-          msg: errorMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      } catch (error) {
-        Fluttertoast.showToast(
-          msg: "로그인 중 알 수 없는 오류가 발생했습니다.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+      if (session != null && mounted) {
+        context.go(routes.home);
       }
     }
   }
@@ -166,7 +138,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.go(routes.findPassword);
+                            context.go(routes.resetPassword);
                           },
                           child: const Text(
                             '비밀번호 찾기',

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/screens/auth/change_password.dart';
+import 'package:flutter_todo/screens/auth/reset_password.dart';
 import 'package:flutter_todo/screens/todo_create_screen.dart';
 import 'package:flutter_todo/theme.dart';
-import 'package:flutter_todo/screens/auth/forgot_password.dart';
 import 'package:flutter_todo/screens/auth/sign_in.dart';
 import 'package:flutter_todo/screens/auth/sign_up.dart';
-import 'package:flutter_todo/service/auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants/routes.dart' as routes;
@@ -39,10 +38,7 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: routes.home,
-        builder: (context, state) {
-          final String? welcomeMessage = state.extra as String?;
-          return const TodoCreateScreen();
-        },
+        builder: (context, state) => const TodoCreateScreen(),
       ),
       GoRoute(
         path: routes.signIn,
@@ -53,8 +49,12 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
-        path: routes.findPassword,
-        builder: (context, state) => const ForgotPasswordScreen(),
+        path: routes.resetPassword,
+        builder: (context, state) => const ResetPasswordPage(),
+      ),
+      GoRoute(
+        path: routes.changePassword,
+        builder: (context, state) => const ChangePasswordPage(),
       ),
     ],
   );

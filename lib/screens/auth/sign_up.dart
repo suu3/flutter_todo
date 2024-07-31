@@ -24,49 +24,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      try {
-        await _authService.signUp(_email, _password);
-        Fluttertoast.showToast(
-          msg: "회원가입 성공!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        // 회원가입 후 다른 화면으로 이동
-      } on AuthException catch (error) {
-        String errorMessage = "회원가입 중 오류가 발생했습니다: ${error.message}";
+      await _authService.signUp(_email, _password);
 
-        switch (error.statusCode) {
-          case '400':
-            errorMessage = "잘못된 요청입니다.";
-            break;
-          case '409':
-            errorMessage = "이미 존재하는 이메일입니다.";
-            break;
-        }
-
-        Fluttertoast.showToast(
-          msg: errorMessage,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      } catch (error) {
-        Fluttertoast.showToast(
-          msg: "회원가입 중 알 수 없는 오류가 발생했습니다.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+      if (mounted) {
+        context.go(routes.signIn);
       }
     }
   }
@@ -127,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  context.go(routes.findPassword);
+                  context.go(routes.resetPassword);
                 },
                 child: const Text('비밀번호 찾기'),
               ),
