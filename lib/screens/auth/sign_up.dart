@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/utils/validators.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -37,6 +35,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('회원가입'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            try {
+              context.pop();
+            } catch (e) {
+              context.go(routes.signIn);
+            }
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,13 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _trySignUp,
-                child: const Text('회원가입'),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.go(routes.signIn);
-                },
-                child: const Text('로그인'),
+                child: const Text('회원가입하기'),
               ),
               TextButton(
                 onPressed: () {

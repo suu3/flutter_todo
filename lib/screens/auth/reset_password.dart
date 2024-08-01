@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,7 +29,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.pop();
+            try {
+              context.pop();
+            } catch (e) {
+              context.go(routes.signIn);
+            }
           },
         ),
       ),

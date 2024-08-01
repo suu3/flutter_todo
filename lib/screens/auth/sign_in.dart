@@ -39,11 +39,11 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: BackgroundPainter(),
-            ),
-          ),
+          // Positioned.fill(
+          //   child: CustomPaint(
+          //     painter: BackgroundPainter(),
+          //   ),
+          // ),
           SingleChildScrollView(
             child: Padding(
               padding:
@@ -114,7 +114,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: ElevatedButton(
                             onPressed: _trySignIn,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow[700],
+                              backgroundColor:
+                                  const Color.fromARGB(255, 255, 175, 118),
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
@@ -155,29 +156,5 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
       ),
     );
-  }
-}
-
-class BackgroundPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.yellow[700]!
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(0, size.height * 0.4)
-      ..quadraticBezierTo(
-          size.width * 0.5, size.height * 0.6, size.width, size.height * 0.4)
-      ..lineTo(size.width, 0)
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
   }
 }

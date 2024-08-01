@@ -33,6 +33,7 @@ class AuthService {
         email: email,
         password: password,
       );
+
       _showSuccessToast("회원가입이 완료되었습니다.");
       return res;
     } on AuthException catch (error) {
@@ -62,6 +63,7 @@ class AuthService {
       );
 
       final Session? session = res.session;
+      print("sign in $res");
       if (session != null) {
         _showSuccessToast("환영합니다!");
       } else {
@@ -98,6 +100,7 @@ class AuthService {
       );
       _showSuccessToast("비밀번호 재설정 메일을 보냈습니다.");
     } catch (error) {
+      print("error $error");
       _showErrorToast("Error: ${error.toString()}");
       rethrow;
     }
