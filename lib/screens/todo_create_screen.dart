@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
+import 'package:flutter_todo/screens/todo_list_screen.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -45,7 +46,12 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
       ref.read(todoListProvider.notifier).addTodo(title);
       // 다른 필드를 저장하는 로직을 여기에 추가할 수 있습니다.
 
-      Navigator.pop(context); // 생성 후 이전 화면으로 돌아갑니다.
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const TodoListScreen()), // NewScreen은 이동할 새로운 화면
+      );
     }
   }
 
