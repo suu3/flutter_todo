@@ -27,11 +27,11 @@ class BottomSheetContentState extends State<BottomSheetContent> {
     _checklist = widget.checklist;
   }
 
-  bool get _allChecked => _checklist.every((item) => item['isChecked'] == true);
+  bool get _allChecked => _checklist.every((item) => item['completed'] == true);
 
   void _toggleCheckbox(int index, bool? value) {
     setState(() {
-      _checklist[index]['isChecked'] = value ?? false;
+      _checklist[index]['completed'] = value ?? false;
     });
   }
 
@@ -88,8 +88,8 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                 int index = entry.key;
                 Map<String, dynamic> item = entry.value;
                 return LabelCheckbox(
-                  label: item['label'],
-                  isChecked: item['isChecked'],
+                  label: item['title'],
+                  isChecked: item['completed'],
                   onChanged: (bool? value) {
                     _toggleCheckbox(index, value);
                   },
