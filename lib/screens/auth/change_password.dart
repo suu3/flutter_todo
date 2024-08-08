@@ -39,7 +39,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _changePassword,
-              child: const Text('비밀번호 변경하긴'),
+              child: const Text('비밀번호 변경하기'),
             ),
           ],
         ),

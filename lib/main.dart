@@ -10,7 +10,7 @@ import 'package:flutter_todo/screens/auth/sign_up.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants/routes.dart' as routes;
-import 'constants/auth.dart' as auth;
+import 'utils/auth.dart' as auth;
 import 'util.dart';
 
 Future<void> main() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
+import 'package:flutter_todo/service/auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,20 +11,20 @@ class SignInScreen extends StatefulWidget {
   _SignInScreenState createState() => _SignInScreenState();
 }
 
-final supabase = Supabase.instance.client;
-
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
+  final supabase = Supabase.instance.client;
   String _email = '';
   String _password = '';
+  final AuthService _authService = AuthService();
 
   Future<void> _trySignIn() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final AuthResponse res = await supabase.auth.signInWithPassword(
-        email: _email,
-        password: _password,
+      final AuthResponse res = await _authService.signInWithPassword(
+        _email,
+        _password,
       );
 
       final Session? session = res.session;
