@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/screens/card_list_screen.dart';
-import 'package:flutter_todo/screens/todo_create_screen.dart';
+//import 'package:flutter_todo/screens/todo_create_screen.dart';
+import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
 import 'package:flutter_todo/theme.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -41,7 +41,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: const TodoCreateScreen(),
+      //home: const TodoCreateScreen(),
+      home: const TodoListScreen(),
     );
   }
 }
