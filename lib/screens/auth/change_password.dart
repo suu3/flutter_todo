@@ -3,14 +3,14 @@ import 'package:flutter_todo/service/auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 
-class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({super.key});
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  _ChangePasswordPageState createState() => _ChangePasswordPageState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreennState();
 }
 
-class _ChangePasswordPageState extends State<ChangePasswordPage> {
+class _ChangePasswordScreennState extends State<ChangePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
@@ -20,7 +20,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     await _authService.updatePassword(
       newPassword,
     );
-    context.go(routes.home);
+
+    if (mounted) {
+      context.push(routes.mainEndpoint);
+    }
   }
 
   @override

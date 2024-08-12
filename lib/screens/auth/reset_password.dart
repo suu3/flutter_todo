@@ -3,14 +3,14 @@ import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
 import 'package:go_router/go_router.dart';
 
-class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  _ResetPasswordPageState createState() => _ResetPasswordPageState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordPageState extends State<ResetPasswordPage> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final AuthService _authService = AuthService();
 
@@ -29,11 +29,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            try {
-              context.pop();
-            } catch (e) {
-              context.go(routes.signIn);
-            }
+            context.pop();
           },
         ),
       ),

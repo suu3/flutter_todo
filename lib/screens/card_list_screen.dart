@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/constants/routes.dart';
 import 'package:flutter_todo/widgets/todo_card.dart';
-
-import 'card_detail_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class CardListScreen extends StatelessWidget {
   const CardListScreen({super.key});
@@ -45,18 +45,14 @@ class CardListScreen extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CardDetailScreen(
-              number: index,
-              title: title,
-              date: date,
-              category: category,
-              checklist: checklist, // 체크리스트 전달
-            ),
-            fullscreenDialog: true,
-          ),
+        context.push(
+          '$cardDetail/$index',
+          extra: {
+            'title': title,
+            'date': date,
+            'category': category,
+            'checklist': checklist,
+          },
         );
       },
       child: Hero(

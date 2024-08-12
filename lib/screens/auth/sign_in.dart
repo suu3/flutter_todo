@@ -8,7 +8,7 @@ class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<SignInScreen> {
@@ -18,20 +18,20 @@ class _SignInScreenState extends State<SignInScreen> {
   String _password = '';
   final AuthService _authService = AuthService();
 
-  Future<void> _trySignIn() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+  Future<void> _signIn() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      final AuthResponse res = await _authService.signInWithPassword(
-        _email,
-        _password,
-      );
+    _formKey.currentState!.save();
 
-      final Session? session = res.session;
+    final AuthResponse res = await _authService.signInWithPassword(
+      _email,
+      _password,
+    );
 
-      if (session != null && mounted) {
-        context.go(routes.home);
-      }
+    final Session? session = res.session;
+
+    if (session != null && mounted) {
+      context.push(routes.mainEndpoint);
     }
   }
 
@@ -40,11 +40,6 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Positioned.fill(
-          //   child: CustomPaint(
-          //     painter: BackgroundPainter(),
-          //   ),
-          // ),
           SingleChildScrollView(
             child: Padding(
               padding:
@@ -113,7 +108,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _trySignIn,
+                            onPressed: _signIn,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   const Color.fromARGB(255, 255, 175, 118),
@@ -131,7 +126,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(height: 16),
                         TextButton(
                           onPressed: () {
-                            context.go(routes.signUp);
+                            context.push(routes.signUp);
                           },
                           child: const Text(
                             '회원가입',
@@ -140,7 +135,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.go(routes.resetPassword);
+                            context.push(routes.resetPassword);
                           },
                           child: const Text(
                             '비밀번호 찾기',

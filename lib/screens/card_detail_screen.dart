@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/widgets/bottom_sheet.dart';
 import 'package:flutter_todo/widgets/todo_card.dart';
+import 'package:go_router/go_router.dart';
 
 class CardDetailScreen extends StatelessWidget {
   final int number;
@@ -26,7 +27,7 @@ class CardDetailScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
       ),
       body: SingleChildScrollView(

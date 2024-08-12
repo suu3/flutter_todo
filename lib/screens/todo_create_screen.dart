@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/screens/todo_list_screen.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,13 +48,7 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     if (title.isNotEmpty && description.isNotEmpty && category != null) {
       ref.read(todoListProvider.notifier).addTodo(title);
       // 다른 필드를 저장하는 로직을 여기에 추가할 수 있습니다.
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const TodoListScreen()), // NewScreen은 이동할 새로운 화면
-      );
+      context.push(routes.todoList);
     }
   }
 
@@ -78,7 +71,7 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               await supabaseService.signOut();
 
               if (context.mounted) {
-                context.go(routes.signIn);
+                context.push(routes.signIn);
               }
             },
           ),

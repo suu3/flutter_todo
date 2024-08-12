@@ -8,7 +8,7 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       await _authService.signUp(_email, _password);
 
       if (mounted) {
-        context.go(routes.signIn);
+        context.push(routes.signIn);
       }
     }
   }
@@ -38,11 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            try {
-              context.pop();
-            } catch (e) {
-              context.go(routes.signIn);
-            }
+            context.pop();
           },
         ),
       ),
@@ -90,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  context.go(routes.resetPassword);
+                  context.push(routes.resetPassword);
                 },
                 child: const Text('비밀번호 찾기'),
               ),

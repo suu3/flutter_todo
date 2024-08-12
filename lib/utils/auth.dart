@@ -12,8 +12,9 @@ String? redirectBySession(String uri, Session? session) {
     }
   } else {
     if (isPublicRoute(uri)) {
-      return routes.home;
+      return routes.mainEndpoint;
     }
   }
+
   return null;
 }

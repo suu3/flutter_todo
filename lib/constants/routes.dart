@@ -1,8 +1,20 @@
-const String home = '/home';
-const String signIn = '/sign-in';
-const String signUp = '/sign-up';
-const String resetPassword = '/reset-password';
-const String changePassword = '/change-password';
+//auth
+const String authRoute = '/auth';
+const String signIn = '$authRoute/sign-in';
+const String signUp = '$authRoute/sign-up';
+const String resetPassword = '$authRoute/reset-password';
+const String changePassword = '$authRoute/change-password';
+
+//todo
+const todoRoute = '/todo';
+const todoCreate = '$todoRoute/create';
+const todoList = '$todoRoute/list';
+
+//card
+const cardRoute = '/card';
+const cardSelect = '$cardRoute/select';
+const cardList = '$cardRoute/list';
+const cardDetail = '$cardRoute/detail';
 
 const List<String> publicRoutes = [
   signIn,
@@ -10,4 +22,4 @@ const List<String> publicRoutes = [
   resetPassword,
 ];
 
-const String mainEndpoint = home;
+const String mainEndpoint = todoCreate;
