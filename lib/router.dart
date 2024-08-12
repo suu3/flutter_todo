@@ -1,7 +1,7 @@
-import 'package:flutter_todo/screens/card_detail_screen.dart';
+import 'package:flutter_todo/screens/temp/card_detail_screen.dart';
 import 'package:flutter_todo/screens/card_list_screen.dart';
-import 'package:flutter_todo/screens/category_selection_screen.dart';
-import 'package:flutter_todo/screens/todo_list_screen.dart';
+import 'package:flutter_todo/screens/temp/category_selection_screen.dart';
+import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/auth/sign_in.dart';
@@ -59,20 +59,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '${routes.cardDetail}/:id',
       builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        final extra = state.extra as Map<String, dynamic>;
-        final title = extra['title'] as String;
-        final date = extra['date'] as String;
-        final category = extra['category'] as String;
-        final checklist = extra['checklist'] as List<Map<String, dynamic>>;
-
-        return CardDetailScreen(
-          number: int.parse(id),
-          title: title,
-          date: date,
-          category: category,
-          checklist: checklist,
-        );
+        final todoId = state.pathParameters['id']!;
+        return CardDetailScreen(todoId: todoId);
       },
     ),
   ],
