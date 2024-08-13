@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/providers/todo_list.dart';
+import 'package:flutter_todo/providers/temp/todo_list.dart';
+import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
+import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
+import 'package:flutter_todo/widgets/date_picker.dart';
 import 'package:go_router/go_router.dart';
-
-import '../service/auth.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -48,8 +49,11 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     }).toList();
 
     if (title.isNotEmpty && description.isNotEmpty && category != null) {
-      ref.read(todoListProvider.notifier).addTodo(title);
+      ref
+          .read(todoListProvider.notifier)
+          .addTodo(title, description, category, checklist);
       // 다른 필드를 저장하는 로직을 여기에 추가할 수 있습니다.
+
       context.push(routes.todoList);
     }
   }
@@ -119,45 +123,53 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   fontSize: 20,
                 )),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CategoryButton(
-                  text: 'Work',
-                  icon: Icons.work,
-                  onTap: () => _selectCategory('Work'),
-                  backgroundColor: Colors.red,
-                  isSelected: _selectedCategory == 'Work',
-                ),
-                const SizedBox(width: 8),
-                CategoryButton(
-                  text: 'Personal',
-                  icon: Icons.person,
-                  onTap: () => _selectCategory('Personal'),
-                  backgroundColor: Colors.green,
-                  isSelected: _selectedCategory == 'Personal',
-                ),
-                const SizedBox(width: 8),
-                CategoryButton(
-                  text: 'Shop',
-                  icon: Icons.shopping_cart,
-                  onTap: () => _selectCategory('Shopping'),
-                  backgroundColor: Colors.orange,
-                  isSelected: _selectedCategory == 'Shopping',
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                CategoryButton(
-                  text: 'Fitness',
-                  icon: Icons.fitness_center,
-                  onTap: () => _selectCategory('Fitness'),
-                  backgroundColor: Colors.purple,
-                  isSelected: _selectedCategory == 'Fitness',
-                ),
-              ],
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 350, // GridView의 높이를 명시적으로 지정
+                    child: GridView.count(
+                      crossAxisCount: 2, // 한 행에 두 개의 버튼을 배치
+                      crossAxisSpacing: 16, // 버튼 간의 가로 간격
+                      mainAxisSpacing: 16, // 버튼 간의 세로 간격
+                      padding: const EdgeInsets.all(16), // 전체 그리드의 패딩
+                      children: [
+                        CategoryButton(
+                          text: 'Work',
+                          icon: Icons.work,
+                          onTap: () => _selectCategory('Work'),
+                          backgroundColor: Colors.red,
+                          isSelected: _selectedCategory == 'Work',
+                        ),
+                        CategoryButton(
+                          text: 'Personal',
+                          icon: Icons.person,
+                          onTap: () => _selectCategory('Personal'),
+                          backgroundColor: Colors.green,
+                          isSelected: _selectedCategory == 'Personal',
+                        ),
+                        CategoryButton(
+                          text: 'Shopping',
+                          icon: Icons.shopping_cart,
+                          onTap: () => _selectCategory('Shopping'),
+                          backgroundColor: Colors.orange,
+                          isSelected: _selectedCategory == 'Shopping',
+                        ),
+                        CategoryButton(
+                          text: 'Fitness',
+                          icon: Icons.fitness_center,
+                          onTap: () => _selectCategory('Fitness'),
+                          backgroundColor: Colors.purple,
+                          isSelected: _selectedCategory == 'Fitness',
+                        ),
+                        // 추가 버튼을 여기에 계속 추가할 수 있습니다.
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 40),
             Column(
