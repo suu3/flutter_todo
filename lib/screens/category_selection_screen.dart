@@ -59,16 +59,6 @@ class CategorySelectionScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   const Text(
                     'Category',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
