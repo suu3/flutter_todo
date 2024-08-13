@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'status_badge.dart'; // status_badge.dart 파일을 임포트하세요
 import 'label_checkbox.dart'; // label_checkbox.dart 파일을 임포트하세요
 
@@ -27,11 +28,11 @@ class BottomSheetContentState extends State<BottomSheetContent> {
     _checklist = widget.checklist;
   }
 
-  bool get _allChecked => _checklist.every((item) => item['isChecked'] == true);
+  bool get _allChecked => _checklist.every((item) => item['completed'] == true);
 
   void _toggleCheckbox(int index, bool? value) {
     setState(() {
-      _checklist[index]['isChecked'] = value ?? false;
+      _checklist[index]['completed'] = value ?? false;
     });
   }
 
@@ -88,8 +89,8 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                 int index = entry.key;
                 Map<String, dynamic> item = entry.value;
                 return LabelCheckbox(
-                  label: item['label'],
-                  isChecked: item['isChecked'],
+                  label: item['title'],
+                  isChecked: item['completed'],
                   onChanged: (bool? value) {
                     _toggleCheckbox(index, value);
                   },
@@ -104,7 +105,7 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                 child: ElevatedButton(
                   onPressed: _allChecked
                       ? () {
-                          Navigator.pop(context); // Close the bottom sheet
+                          context.pop();
                         }
                       : null, // 비활성화
                   style: ElevatedButton.styleFrom(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/widgets/label_checkbox.dart';
+import 'package:flutter_todo/providers/temp/todo_list.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:go_router/go_router.dart';
 
 class TodoListScreen extends ConsumerWidget {
@@ -10,16 +10,27 @@ class TodoListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todoList = ref.watch(todoListProvider);
-    final todoListNotifier = ref.read(todoListProvider.notifier);
+    //final todoListNotifier = ref.read(todoListProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.pop();
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                context.push(routes.todoCreate);
+              },
+              icon: const Icon(Icons.add_box_outlined)),
+          IconButton(
+              onPressed: () {
+                context.push(routes.cardSelect);
+              },
+              icon: const Icon(Icons.category_outlined))
+        ],
       ),
       body: todoList.when(
         data: (todos) => Column(
@@ -71,16 +82,16 @@ class TodoListScreen extends ConsumerWidget {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 4.0, horizontal: 16.0),
-                    child: LabelCheckbox(
-                      label: todo.title,
-                      isChecked: todo.completed,
-                      onChanged: (value) {
-                        todoListNotifier.updateTodo(
-                          todo.id,
-                          completed: value ?? false,
+                    child: InkWell(
+                      onTap: () {
+                        context.push(
+                          '${routes.cardDetail}/${todo.id}',
                         );
                       },
-                      direction: Direction.left,
+                      child: ListTile(
+                        title: Text(todo.title),
+                        subtitle: Text(todo.description),
+                      ),
                     ),
                   );
                 },
