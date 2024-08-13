@@ -1,7 +1,8 @@
-import 'package:flutter_todo/screens/temp/card_detail_screen.dart';
+import 'package:flutter_todo/screens/card_detail_screen.dart';
 import 'package:flutter_todo/screens/card_list_screen.dart';
-import 'package:flutter_todo/screens/temp/category_selection_screen.dart';
-import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
+import 'package:flutter_todo/screens/category_selection_screen.dart';
+import 'package:flutter_todo/screens/todo_list_screen.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/auth/sign_in.dart';
@@ -13,11 +14,11 @@ import 'constants/routes.dart' as routes;
 import 'utils/auth.dart' as auth;
 
 final GoRouter router = GoRouter(
-  initialLocation: routes.signIn,
-  redirect: (context, state) {
-    final session = Supabase.instance.client.auth.currentSession;
-    return auth.redirectBySession(state.uri.toString(), session);
-  },
+  initialLocation: routes.cardSelect,
+  // redirect: (context, state) {
+  //   final session = Supabase.instance.client.auth.currentSession;
+  //   return auth.redirectBySession(state.uri.toString(), session);
+  // },
   routes: [
     //auth Routes
     GoRoute(
@@ -56,12 +57,12 @@ final GoRouter router = GoRouter(
       path: routes.cardList,
       builder: (context, state) => const CardListScreen(),
     ),
-    GoRoute(
-      path: '${routes.cardDetail}/:id',
-      builder: (context, state) {
-        final todoId = state.pathParameters['id']!;
-        return CardDetailScreen(todoId: todoId);
-      },
-    ),
+    // GoRoute(
+    //   path: '${routes.cardDetail}/:id',
+    //   builder: (context, state) {
+    //     final todoId = state.pathParameters['id']!;
+    //     return const CardDetailScreen();
+    //   },
+    // ),
   ],
 );
