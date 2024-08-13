@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/temp/todo_list.dart';
-import 'package:flutter_todo/screens/temp/card_detail_screen.dart';
-import 'package:flutter_todo/screens/temp/todo_create_screen.dart';
-import 'package:flutter_todo/screens/temp/category_selection_screen.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
+import 'package:go_router/go_router.dart';
 
 class TodoListScreen extends ConsumerWidget {
   const TodoListScreen({super.key});
@@ -23,20 +22,12 @@ class TodoListScreen extends ConsumerWidget {
         actions: <Widget>[
           IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TodoCreateScreen()),
-                );
+                context.push(routes.todoCreate);
               },
               icon: const Icon(Icons.add_box_outlined)),
           IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CategorySelectionScreen()),
-                );
+                context.push(routes.cardSelect);
               },
               icon: const Icon(Icons.category_outlined))
         ],
@@ -93,12 +84,8 @@ class TodoListScreen extends ConsumerWidget {
                         vertical: 4.0, horizontal: 16.0),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                CardDetailScreen(todoId: todo.id),
-                          ),
+                        context.push(
+                          '${routes.cardDetail}/${todo.id}',
                         );
                       },
                       child: ListTile(

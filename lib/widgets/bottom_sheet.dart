@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'status_badge.dart'; // status_badge.dart 파일을 임포트하세요
 import 'label_checkbox.dart'; // label_checkbox.dart 파일을 임포트하세요
 
@@ -104,7 +105,7 @@ class BottomSheetContentState extends State<BottomSheetContent> {
                 child: ElevatedButton(
                   onPressed: _allChecked
                       ? () {
-                          Navigator.pop(context); // Close the bottom sheet
+                          context.pop();
                         }
                       : null, // 비활성화
                   style: ElevatedButton.styleFrom(
