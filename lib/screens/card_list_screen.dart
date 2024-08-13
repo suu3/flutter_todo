@@ -11,11 +11,36 @@ class CardListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Card List',
+          'To do List',
           style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
         ),
         backgroundColor:
             Theme.of(context).colorScheme.primary, // 테마의 primary 색상 사용
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text("Home"),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
