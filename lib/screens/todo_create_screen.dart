@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
+import 'package:flutter_todo/widgets/date_picker.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -16,6 +17,8 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final List<TextEditingController> _checklistControllers = [];
 
   String? _selectedCategory;
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   void _addChecklistItem() {
     setState(() {
@@ -66,62 +69,100 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select Category',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CategoryButton(
-                      text: 'Work',
-                      icon: Icons.work,
-                      onTap: () => _selectCategory('Work'),
-                      backgroundColor: Colors.red,
-                      isSelected: _selectedCategory == 'Work',
-                    ),
-                    CategoryButton(
-                      text: 'Personal',
-                      icon: Icons.person,
-                      onTap: () => _selectCategory('Personal'),
-                      backgroundColor: Colors.green,
-                      isSelected: _selectedCategory == 'Personal',
-                    ),
-                    CategoryButton(
-                      text: 'Shopping',
-                      icon: Icons.shopping_cart,
-                      onTap: () => _selectCategory('Shopping'),
-                      backgroundColor: Colors.orange,
-                      isSelected: _selectedCategory == 'Shopping',
-                    ),
-                  ],
+                const Text('Select Due Date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+                DatePickerWidget(
+                  initialDate: _startDate,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _startDate = date;
+                    });
+                  },
+                  label: 'Start Date',
                 ),
-                const SizedBox(
-                  height: 20,
+                DatePickerWidget(
+                  initialDate: _endDate,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _endDate = date;
+                    });
+                  },
+                  label: 'End Date',
                 ),
-                Row(
-                  children: [
-                    CategoryButton(
-                      text: 'Fitness',
-                      icon: Icons.fitness_center,
-                      onTap: () => _selectCategory('Fitness'),
-                      backgroundColor: Colors.purple,
-                      isSelected: _selectedCategory == 'Fitness',
-                    ),
-                  ],
-                )
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+            const SizedBox(height: 40),
+            const Text('Select Category',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CategoryButton(
+                  text: 'Work',
+                  icon: Icons.work,
+                  onTap: () => _selectCategory('Work'),
+                  backgroundColor: Colors.red,
+                  isSelected: _selectedCategory == 'Work',
+                ),
+                const SizedBox(width: 8),
+                CategoryButton(
+                  text: 'Personal',
+                  icon: Icons.person,
+                  onTap: () => _selectCategory('Personal'),
+                  backgroundColor: Colors.green,
+                  isSelected: _selectedCategory == 'Personal',
+                ),
+                const SizedBox(width: 8),
+                CategoryButton(
+                  text: 'Shop',
+                  icon: Icons.shopping_cart,
+                  onTap: () => _selectCategory('Shopping'),
+                  backgroundColor: Colors.orange,
+                  isSelected: _selectedCategory == 'Shopping',
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                CategoryButton(
+                  text: 'Fitness',
+                  icon: Icons.fitness_center,
+                  onTap: () => _selectCategory('Fitness'),
+                  backgroundColor: Colors.purple,
+                  isSelected: _selectedCategory == 'Fitness',
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Select Due Date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+              ],
             ),
             const SizedBox(height: 50),
             Row(
@@ -141,25 +182,28 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            ..._checklistControllers.asMap().entries.map((entry) {
-              int index = entry.key;
-              TextEditingController controller = entry.value;
-              return Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: controller,
-                      decoration:
-                          const InputDecoration(labelText: 'Checklist item'),
+            Column(
+              children: _checklistControllers.asMap().entries.map((entry) {
+                int index = entry.key;
+                TextEditingController controller = entry.value;
+                return Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          labelText: 'Checklist item',
+                        ),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.remove_circle),
-                    onPressed: () => _removeChecklistItem(index),
-                  ),
-                ],
-              );
-            }),
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle),
+                      onPressed: () => _removeChecklistItem(index),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
             const SizedBox(height: 40),
             Center(
               child: ElevatedButton(
@@ -167,6 +211,7 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                 child: const Text('Create Todo'),
               ),
             ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
