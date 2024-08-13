@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/router.dart';
 import 'package:flutter_todo/theme.dart';
@@ -7,7 +8,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'utils/create_text_theme.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await dotenv.load(fileName: ".env");
 
@@ -15,6 +17,8 @@ Future<void> main() async {
     url: dotenv.get('SUPABASE_URL'),
     anonKey: dotenv.get('SUPABASE_ANON_KEY'),
   );
+
+  FlutterNativeSplash.remove();
 
   runApp(const ProviderScope(child: MyApp()));
 }
