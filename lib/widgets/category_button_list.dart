@@ -15,10 +15,10 @@ class CategoryButtonList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: CategoryButton(
-              text: category['title'],
+              text: category['text'],
               icon: category['icon'],
               onTap: () {},
-              backgroundColor: Color(int.parse(category['color'])),
+              backgroundColor: category['backgroundColor'] as Color,
               isSelected: false,
               tasks: category.containsKey('tasks') ? category['tasks'] : null,
               showAddButton: true,

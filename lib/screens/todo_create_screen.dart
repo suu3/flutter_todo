@@ -19,6 +19,30 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final _descriptionController = TextEditingController();
   final List<TextEditingController> _checklistControllers = [];
 
+  final List<Map<String, dynamic>> categories = [
+    {
+      'text': 'Work',
+      'icon': Icons.work,
+      'backgroundColor': Colors.red,
+    },
+    {
+      'text': 'Personal',
+      'icon': Icons.person,
+      'backgroundColor': Colors.green,
+    },
+    {
+      'text': 'Shopping',
+      'icon': Icons.shopping_cart,
+      'backgroundColor': Colors.orange,
+    },
+    {
+      'text': 'Fitness',
+      'icon': Icons.fitness_center,
+      'backgroundColor': Colors.purple,
+    },
+    // 추가 카테고리를 여기에 계속 추가할 수 있습니다.
+  ];
+
   String? _selectedCategory;
   DateTime? _startDate;
   DateTime? _endDate;
@@ -141,37 +165,15 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                       crossAxisSpacing: 16, // 버튼 간의 가로 간격
                       mainAxisSpacing: 16, // 버튼 간의 세로 간격
                       padding: const EdgeInsets.all(16), // 전체 그리드의 패딩
-                      children: [
-                        CategoryButton(
-                          text: 'Work',
-                          icon: Icons.work,
-                          onTap: () => _selectCategory('Work'),
-                          backgroundColor: Colors.red,
-                          isSelected: _selectedCategory == 'Work',
-                        ),
-                        CategoryButton(
-                          text: 'Personal',
-                          icon: Icons.person,
-                          onTap: () => _selectCategory('Personal'),
-                          backgroundColor: Colors.green,
-                          isSelected: _selectedCategory == 'Personal',
-                        ),
-                        CategoryButton(
-                          text: 'Shopping',
-                          icon: Icons.shopping_cart,
-                          onTap: () => _selectCategory('Shopping'),
-                          backgroundColor: Colors.orange,
-                          isSelected: _selectedCategory == 'Shopping',
-                        ),
-                        CategoryButton(
-                          text: 'Fitness',
-                          icon: Icons.fitness_center,
-                          onTap: () => _selectCategory('Fitness'),
-                          backgroundColor: Colors.purple,
-                          isSelected: _selectedCategory == 'Fitness',
-                        ),
-                        // 추가 버튼을 여기에 계속 추가할 수 있습니다.
-                      ],
+                      children: categories.map((category) {
+                        return CategoryButton(
+                          text: category['text'] as String,
+                          icon: category['icon'] as IconData,
+                          onTap: () => _selectCategory(category['text']),
+                          backgroundColor: category['backgroundColor'] as Color,
+                          isSelected: _selectedCategory == category['text'],
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],

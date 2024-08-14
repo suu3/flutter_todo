@@ -3,15 +3,38 @@ import 'package:flutter_todo/widgets/category_button_list.dart';
 import 'package:flutter_todo/widgets/task_card.dart';
 
 class CategorySelectionScreen extends StatelessWidget {
-  const CategorySelectionScreen({super.key});
+  CategorySelectionScreen({super.key});
 
-  final List<Map<String, String>> categories = const [
-    {'title': 'Work', 'date': '2024-07-22', 'category': 'work'},
-    {'title': 'Personal', 'date': '2024-07-22', 'category': 'personal'},
-    {'title': 'Study', 'date': '2024-07-22', 'category': 'study'},
+  // 'const'를 제거하고 'final'로 변경
+  final List<Map<String, dynamic>> categories = [
+    {
+      'text': 'Work',
+      'icon': Icons.work,
+      'tasks': 5,
+      'backgroundColor': Colors.red,
+    },
+    {
+      'text': 'Personal',
+      'icon': Icons.person,
+      'tasks': 3,
+      'backgroundColor': Colors.green,
+    },
+    {
+      'text': 'Shopping',
+      'icon': Icons.shopping_cart,
+      'tasks': 1,
+      'backgroundColor': Colors.orange,
+    },
+    {
+      'text': 'Fitness',
+      'icon': Icons.fitness_center,
+      'tasks': 2,
+      'backgroundColor': Colors.purple,
+    },
+    // 추가 카테고리를 여기에 계속 추가할 수 있습니다.
   ];
 
-  final List<Map<String, dynamic>> todayTasks = const [
+  final List<Map<String, dynamic>> todayTasks = [
     {'title': 'Sketching', 'completed': 2, 'total': 4, 'color': Colors.green},
     {
       'title': 'Wireframing',
