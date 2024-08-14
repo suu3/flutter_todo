@@ -51,6 +51,8 @@ class TodoList extends _$TodoList {
     String title,
     String description,
     String category,
+    String? startedAt,
+    String? endedAt,
     List<Map<String, dynamic>> checklist,
   ) async {
     final supabase = Supabase.instance.client;
@@ -59,9 +61,6 @@ class TodoList extends _$TodoList {
       var categoryId = 'fb1778f3-838c-4c2c-8d27-454ef6993b13'; // category
       var createdAt = DateTime.now().toIso8601String();
       var updatedAt = DateTime.now().toIso8601String();
-      var startedAt = DateTime.now().toIso8601String();
-      var endedAt =
-          DateTime.now().add(const Duration(days: 7)).toIso8601String();
       var completed = false;
 
       final taskResponse = await supabase.from('tasks').insert({

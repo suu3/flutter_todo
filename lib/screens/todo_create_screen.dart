@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/providers/temp/todo_list.dart';
+import 'package:flutter_todo/providers/todo_list.dart';
 import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
-import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
 import 'package:flutter_todo/widgets/date_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
@@ -40,6 +39,8 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     final title = _titleController.text;
     final description = _descriptionController.text;
     final category = _selectedCategory;
+    final startedAt = _startDate?.toIso8601String();
+    final endedAt = _endDate?.toIso8601String();
     final checklist = _checklistControllers.map((controller) {
       return {
         'label': controller.text,
@@ -49,9 +50,14 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
     }).toList();
 
     if (title.isNotEmpty && description.isNotEmpty && category != null) {
-      ref
-          .read(todoListProvider.notifier)
-          .addTodo(title, description, category, checklist);
+      ref.read(todoListProvider.notifier).addTodo(
+            title,
+            description,
+            category,
+            startedAt,
+            endedAt,
+            checklist,
+          );
       // 다른 필드를 저장하는 로직을 여기에 추가할 수 있습니다.
 
       context.push(routes.todoList);
