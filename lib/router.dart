@@ -51,8 +51,15 @@ final GoRouter router = GoRouter(
     //card Routes
     GoRoute(
       path: routes.cardSelect,
-      builder: (context, state) => const CategorySelectionScreen(),
+      builder: (context, state) => CategorySelectionScreen(),
     ),
+    // GoRoute( //이후 카테고리 별 필터링 정보 조회 라우팅
+    //   path: '/category/:id', // :id는 파라미터를 의미
+    //   builder: (context, state) {
+    //     final String categoryId = state.params['id']!;
+    //     return CategoryScreen(id: categoryId);
+    //   },
+    // ),
     GoRoute(
       path: routes.cardList,
       builder: (context, state) => const CardListScreen(),
@@ -61,7 +68,9 @@ final GoRouter router = GoRouter(
     //   path: '${routes.cardDetail}/:id',
     //   builder: (context, state) {
     //     final todoId = state.pathParameters['id']!;
-    //     return const CardDetailScreen();
+    //     return const CardDetailScreen(
+    //       todoId: '1',
+    //     );
     //   },
     // ),
   ],
