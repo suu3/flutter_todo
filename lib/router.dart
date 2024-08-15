@@ -1,7 +1,8 @@
-import 'package:flutter_todo/screens/temp/card_detail_screen.dart';
+import 'package:flutter_todo/screens/card_detail_screen.dart';
 import 'package:flutter_todo/screens/card_list_screen.dart';
-import 'package:flutter_todo/screens/temp/category_selection_screen.dart';
-import 'package:flutter_todo/screens/temp/todo_list_screen.dart';
+import 'package:flutter_todo/screens/category_selection_screen.dart';
+import 'package:flutter_todo/screens/todo_list_screen.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'screens/auth/sign_in.dart';
@@ -14,10 +15,10 @@ import 'utils/auth.dart' as auth;
 
 final GoRouter router = GoRouter(
   initialLocation: routes.signIn,
-  redirect: (context, state) {
-    final session = Supabase.instance.client.auth.currentSession;
-    return auth.redirectBySession(state.uri.toString(), session);
-  },
+  // redirect: (context, state) {
+  //   final session = Supabase.instance.client.auth.currentSession;
+  //   return auth.redirectBySession(state.uri.toString(), session);
+  // },
   routes: [
     //auth Routes
     GoRoute(
@@ -50,18 +51,27 @@ final GoRouter router = GoRouter(
     //card Routes
     GoRoute(
       path: routes.cardSelect,
-      builder: (context, state) => const CategorySelectionScreen(),
+      builder: (context, state) => CategorySelectionScreen(),
     ),
+    // GoRoute( //이후 카테고리 별 필터링 정보 조회 라우팅
+    //   path: '/category/:id', // :id는 파라미터를 의미
+    //   builder: (context, state) {
+    //     final String categoryId = state.params['id']!;
+    //     return CategoryScreen(id: categoryId);
+    //   },
+    // ),
     GoRoute(
       path: routes.cardList,
       builder: (context, state) => const CardListScreen(),
     ),
-    GoRoute(
-      path: '${routes.cardDetail}/:id',
-      builder: (context, state) {
-        final todoId = state.pathParameters['id']!;
-        return CardDetailScreen(todoId: todoId);
-      },
-    ),
+    // GoRoute(
+    //   path: '${routes.cardDetail}/:id',
+    //   builder: (context, state) {
+    //     final todoId = state.pathParameters['id']!;
+    //     return const CardDetailScreen(
+    //       todoId: '1',
+    //     );
+    //   },
+    // ),
   ],
 );

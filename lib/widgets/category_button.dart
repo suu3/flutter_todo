@@ -6,6 +6,8 @@ class CategoryButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color backgroundColor;
   final bool isSelected;
+  final int? tasks; // 선택형 변수로 변경
+  final bool? showAddButton; // 옵셔널 플러스 버튼
 
   const CategoryButton({
     super.key,
@@ -14,6 +16,8 @@ class CategoryButton extends StatelessWidget {
     required this.onTap,
     required this.backgroundColor,
     required this.isSelected,
+    this.tasks, // 선택형 변수로 변경
+    this.showAddButton, // 옵셔널 플러스 버튼
   });
 
   @override
@@ -21,9 +25,9 @@ class CategoryButton extends StatelessWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints(
         minWidth: 50,
-        minHeight: 50,
-        maxWidth: 100,
-        maxHeight: 100,
+        minHeight: 40,
+        maxWidth: 130,
+        maxHeight: 130,
       ),
       child: AspectRatio(
         aspectRatio: 1,
@@ -66,6 +70,25 @@ class CategoryButton extends StatelessWidget {
                               isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
+                      if (tasks != null && tasks! > 0)
+                        Text(
+                          '$tasks tasks',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      if (showAddButton == true)
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
