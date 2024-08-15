@@ -14,7 +14,7 @@ import 'constants/routes.dart' as routes;
 import 'utils/auth.dart' as auth;
 
 final GoRouter router = GoRouter(
-  initialLocation: routes.cardSelect,
+  initialLocation: routes.signIn,
   // redirect: (context, state) {
   //   final session = Supabase.instance.client.auth.currentSession;
   //   return auth.redirectBySession(state.uri.toString(), session);
