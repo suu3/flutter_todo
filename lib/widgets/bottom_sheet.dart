@@ -4,7 +4,7 @@ import 'status_badge.dart';
 import 'label_checkbox.dart';
 
 import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/models/temp/todo.dart';
+import 'package:flutter_todo/models/todo.dart';
 
 class BottomSheetContent extends ConsumerStatefulWidget {
   final String status;
