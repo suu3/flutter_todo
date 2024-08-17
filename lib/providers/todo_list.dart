@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter_todo/models/temp/todo.dart';
+import 'package:flutter_todo/models/todo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
