@@ -71,10 +71,10 @@ class CategoryList extends _$CategoryList {
         return;
       }
 
-      state = state.whenData((categories){
-        return categories.map((category){
-          if(category.id == id){
-            return category.copyWith(title: title, color: color)
+      state = state.whenData((categories) {
+        return categories.map((category) {
+          if (category.id == id) {
+            return category.copyWith(title: title, color: color);
           }
           return category;
         }).toList();
@@ -87,16 +87,13 @@ class CategoryList extends _$CategoryList {
   Future<void> removeCategory(String id) async {
     final supabase = Supabase.instance.client;
     try {
-      final response = await supabase
-      .from('category')
-      .delete()
-      .eq('id', id)
-      .select();
+      final response =
+          await supabase.from('category').delete().eq('id', id).select();
 
-      if(response.isEmpty){
+      if (response.isEmpty) {
         return;
       }
-      state = state.whenData((categories){
+      state = state.whenData((categories) {
         return categories.where((category) => category.id != id).toList();
       });
     } catch (e) {
