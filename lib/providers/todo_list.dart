@@ -58,7 +58,7 @@ class TodoList extends _$TodoList {
     final supabase = Supabase.instance.client;
     try {
       var userId = 'ad5a4932-19e5-4f97-a4d8-29a6fa0e2c0b';
-      var categoryId = 'fb1778f3-838c-4c2c-8d27-454ef6993b13'; // category
+      var categoryId = category;
       var createdAt = DateTime.now().toIso8601String();
       var updatedAt = DateTime.now().toIso8601String();
       var completed = false;

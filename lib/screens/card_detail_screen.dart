@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
+
 import 'package:flutter_todo/widgets/bottom_sheet.dart';
 import 'package:flutter_todo/widgets/todo_card.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_todo/constants/routes.dart' as routes;
 
 class CardDetailScreen extends ConsumerStatefulWidget {
   final String todoId;
@@ -19,7 +21,7 @@ class CardDetailScreenState extends ConsumerState<CardDetailScreen> {
     final todoListNotifier = ref.read(todoListProvider.notifier);
     await todoListNotifier.removeTodo(widget.todoId);
     if (mounted) {
-      context.pop();
+      context.push(routes.todoList);
     }
   }
 
