@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_todo/models/category.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
 import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
 import 'package:flutter_todo/widgets/date_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/providers/category_list.dart';
 
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
@@ -21,18 +19,33 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   final _descriptionController = TextEditingController();
   final List<TextEditingController> _checklistControllers = [];
 
+  final List<Map<String, dynamic>> categories = [
+    {
+      'text': 'Work',
+      'icon': Icons.work,
+      'backgroundColor': Colors.red,
+    },
+    {
+      'text': 'Personal',
+      'icon': Icons.person,
+      'backgroundColor': Colors.green,
+    },
+    {
+      'text': 'Shopping',
+      'icon': Icons.shopping_cart,
+      'backgroundColor': Colors.orange,
+    },
+    {
+      'text': 'Fitness',
+      'icon': Icons.fitness_center,
+      'backgroundColor': Colors.purple,
+    },
+    // 추가 카테고리를 여기에 계속 추가할 수 있습니다.
+  ];
+
   String? _selectedCategory;
   DateTime? _startDate;
   DateTime? _endDate;
-  late Future<List<Category>?> _categoriesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    const userId = 'ad5a4932-19e5-4f97-a4d8-29a6fa0e2c0b';
-    _categoriesFuture =
-        ref.read(categoryListProvider.notifier).getCategories(userId);
-  }
 
   void _addChecklistItem() {
     setState(() {
@@ -69,6 +82,8 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
             endedAt,
             checklist,
           );
+      // 다른 필드를 저장하는 로직을 여기에 추가할 수 있습니다.
+
       context.push(routes.todoList);
     }
   }
@@ -93,152 +108,147 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
 
               if (context.mounted) {
                 context.push(routes.signIn);
-                //context.push(routes.todoList);
               }
             },
           ),
         ],
       ),
-      body: FutureBuilder<List<Category>?>(
-        future: _categoriesFuture, // 이미 초기화된 Future 사용
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No categories found'));
-          } else {
-            final categories = snapshot.data!;
-
-            return SingleChildScrollView(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Select Due Date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+                DatePickerWidget(
+                  initialDate: _startDate,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _startDate = date;
+                    });
+                  },
+                  label: 'Start Date',
+                ),
+                DatePickerWidget(
+                  initialDate: _endDate,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _endDate = date;
+                    });
+                  },
+                  label: 'End Date',
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
+            const Text('Select Category',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
+            const SizedBox(height: 20),
+            SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Select Due Date',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      )),
-                  DatePickerWidget(
-                    initialDate: _startDate,
-                    onDateSelected: (date) {
-                      setState(() {
-                        _startDate = date;
-                      });
-                    },
-                    label: 'Start Date',
-                  ),
-                  DatePickerWidget(
-                    initialDate: _endDate,
-                    onDateSelected: (date) {
-                      setState(() {
-                        _endDate = date;
-                      });
-                    },
-                    label: 'End Date',
-                  ),
-                  const SizedBox(height: 40),
-                  const Text('Select Category',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      )),
-                  const SizedBox(height: 20),
                   SizedBox(
-                    height: 350,
+                    height: 350, // GridView의 높이를 명시적으로 지정
                     child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      padding: const EdgeInsets.all(16),
+                      crossAxisCount: 2, // 한 행에 두 개의 버튼을 배치
+                      crossAxisSpacing: 16, // 버튼 간의 가로 간격
+                      mainAxisSpacing: 16, // 버튼 간의 세로 간격
+                      padding: const EdgeInsets.all(16), // 전체 그리드의 패딩
                       children: categories.map((category) {
                         return CategoryButton(
-                          text: category.title,
-                          icon: category.icon,
-                          onTap: () => _selectCategory(category.id),
-                          backgroundColor: category.color,
-                          isSelected: _selectedCategory == category.id,
+                          text: category['text'] as String,
+                          icon: category['icon'] as IconData,
+                          onTap: () => _selectCategory(category['text']),
+                          backgroundColor: category['backgroundColor'] as Color,
+                          isSelected: _selectedCategory == category['text'],
                         );
                       }).toList(),
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Select Due Date',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      TextField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(labelText: 'Title'),
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _descriptionController,
-                        decoration:
-                            const InputDecoration(labelText: 'Description'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Checklist',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.add_box),
-                        onPressed: _addChecklistItem,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Column(
-                    children:
-                        _checklistControllers.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      TextEditingController controller = entry.value;
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: controller,
-                              decoration: const InputDecoration(
-                                labelText: 'Checklist item',
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeChecklistItem(index),
-                          ),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 40),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _createTodo,
-                      child: const Text('Create Todo'),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
                 ],
               ),
-            );
-          }
-        },
+            ),
+            const SizedBox(height: 40),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Select Due Date',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
+                TextField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'Description'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 50),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Checklist',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add_box),
+                  onPressed: _addChecklistItem,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Column(
+              children: _checklistControllers.asMap().entries.map((entry) {
+                int index = entry.key;
+                TextEditingController controller = entry.value;
+                return Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          labelText: 'Checklist item',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle),
+                      onPressed: () => _removeChecklistItem(index),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 40),
+            Center(
+              child: ElevatedButton(
+                onPressed: _createTodo,
+                child: const Text('Create Todo'),
+              ),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }

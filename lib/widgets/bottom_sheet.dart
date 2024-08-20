@@ -4,7 +4,7 @@ import 'status_badge.dart';
 import 'label_checkbox.dart';
 
 import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/models/todo.dart';
+import 'package:flutter_todo/models/temp/todo.dart';
 
 class BottomSheetContent extends ConsumerStatefulWidget {
   final String status;
@@ -78,101 +78,96 @@ class BottomSheetContentState extends ConsumerState<BottomSheetContent> {
 
     return asyncTodos.when(
       data: (todos) {
-        try {
-          final todo = todos.firstWhere((todo) => todo.id == widget.todoId);
-          bool isCompleted = todo.completed;
+        final todo = todos.firstWhere((todo) => todo.id == widget.todoId);
+        bool isCompleted = todo.completed;
 
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            height: 350,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Text(
-                        'Status',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16.0),
+          height: 350,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      'Status',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const Spacer(),
-                      StatusBadge(
-                          status: isCompleted ? 'completed' : 'ongoing'),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Description',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
+                    const Spacer(),
+                    StatusBadge(status: isCompleted ? 'completed' : 'ongoing'),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.description,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  widget.description,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Checklist',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Checklist',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 8),
-                  Column(
-                    children: _checklist.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      Map<String, dynamic> item = entry.value;
-                      return LabelCheckbox(
-                        label: item['title'],
-                        isChecked: item['completed'],
-                        onChanged: (bool? value) {
-                          _toggleCheckbox(index, value);
-                        },
-                        direction: item['direction'] ?? Direction.left,
-                        icon: item['icon'],
-                      );
-                    }).toList(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: _allChecked
-                            ? _completeTodo
-                            : null, // _completeTodo 호출
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 15),
+                ),
+                const SizedBox(height: 8),
+                Column(
+                  children: _checklist.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    Map<String, dynamic> item = entry.value;
+                    return LabelCheckbox(
+                      label: item['title'],
+                      isChecked: item['completed'],
+                      onChanged: (bool? value) {
+                        _toggleCheckbox(index, value);
+                      },
+                      direction: item['direction'] ?? Direction.left,
+                      icon: item['icon'],
+                    );
+                  }).toList(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: _allChecked
+                          ? _completeTodo
+                          : null, // _completeTodo 호출
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Text(
-                          'Complete',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 100, vertical: 15),
+                      ),
+                      child: const Text(
+                        'Complete',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        } catch (e) {
-          return const Center(child: Text('Todo not found'));
-        }
+          ),
+        );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Error: $err')),

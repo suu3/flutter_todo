@@ -15,7 +15,6 @@ import 'utils/auth.dart' as auth;
 
 final GoRouter router = GoRouter(
   initialLocation: routes.signIn,
-  //initialLocation: routes.todoCreate,
   // redirect: (context, state) {
   //   final session = Supabase.instance.client.auth.currentSession;
   //   return auth.redirectBySession(state.uri.toString(), session);
@@ -74,14 +73,5 @@ final GoRouter router = GoRouter(
     //     );
     //   },
     // ),
-    GoRoute(
-      path: '${routes.cardDetail}/:id',
-      builder: (context, state) {
-        final todoId = state.pathParameters['id']!;
-        return CardDetailScreen(
-          todoId: todoId,
-        );
-      },
-    ),
   ],
 );
