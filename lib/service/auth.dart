@@ -117,4 +117,13 @@ class AuthService {
       rethrow;
     }
   }
+
+  Future<UserResponse> getCurrentUser() async {
+    try {
+      final UserResponse res = await _client.auth.getUser();
+      return res;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

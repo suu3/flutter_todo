@@ -2,35 +2,43 @@ import 'dart:async';
 import 'package:flutter_todo/models/todo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_todo/service/auth.dart';
 
 part 'todo_list.g.dart';
 
 @riverpod
 class TodoList extends _$TodoList {
+  final AuthService _authService = AuthService();
   @override
   Future<List<Todo>> build() async {
-    return await getTodos('ad5a4932-19e5-4f97-a4d8-29a6fa0e2c0b') ?? [];
+    return await getTodos() ?? [];
   }
 
-  Future<List<Todo>?> getTodos(String userId) async {
+  Future<List<Todo>?> getTodos() async {
     final supabase = Supabase.instance.client;
-    try {
-      final response = await supabase
-          .from('tasks')
-          .select('*, checklist(*)')
-          .eq('user_id', userId);
+    final currentUser = await _authService.getCurrentUser();
+    if (currentUser.user == null) {
+      return null;
+    } else {
+      try {
+        var currentUserId = currentUser.user?.id as String;
+        final response = await supabase
+            .from('tasks')
+            .select('*, checklist(*)')
+            .eq('user_id', currentUserId);
 
-      if (response.isEmpty) {
+        if (response.isEmpty) {
+          return null;
+        }
+
+        final todos = (response as List)
+            .map((taskJson) => Todo.fromJson(taskJson))
+            .toList();
+        return todos;
+      } catch (e) {
+        print(e);
         return null;
       }
-
-      final todos = (response as List)
-          .map((taskJson) => Todo.fromJson(taskJson))
-          .toList();
-      return todos;
-    } catch (e) {
-      print(e);
-      return null;
     }
   }
 
@@ -56,71 +64,76 @@ class TodoList extends _$TodoList {
     List<Map<String, dynamic>> checklist,
   ) async {
     final supabase = Supabase.instance.client;
-    try {
-      var userId = 'ad5a4932-19e5-4f97-a4d8-29a6fa0e2c0b';
-      var categoryId = category;
-      var createdAt = DateTime.now().toIso8601String();
-      var updatedAt = DateTime.now().toIso8601String();
-      var completed = false;
+    final currentUser = await _authService.getCurrentUser();
+    if (currentUser.user == null) {
+      return;
+    } else {
+      try {
+        var currentUserId = currentUser.user?.id as String;
+        var categoryId = category;
+        var createdAt = DateTime.now().toIso8601String();
+        var updatedAt = DateTime.now().toIso8601String();
+        var completed = false;
 
-      final taskResponse = await supabase.from('tasks').insert({
-        'user_id': userId,
-        'category_id': categoryId,
-        'title': title,
-        'description': description,
-        'created_at': createdAt,
-        'updated_at': updatedAt,
-        'started_at': startedAt,
-        'ended_at': endedAt,
-        'completed': completed,
-      }).select();
+        final taskResponse = await supabase.from('tasks').insert({
+          'user_id': currentUserId,
+          'category_id': categoryId,
+          'title': title,
+          'description': description,
+          'created_at': createdAt,
+          'updated_at': updatedAt,
+          'started_at': startedAt,
+          'ended_at': endedAt,
+          'completed': completed,
+        }).select();
 
-      if (taskResponse.isEmpty) {
-        throw Exception('Failed to insert task');
+        if (taskResponse.isEmpty) {
+          throw Exception('Failed to insert task');
+        }
+
+        final taskId = taskResponse.first['id'];
+        final checklistItems = checklist
+            .map((item) => {
+                  'task_id': taskId,
+                  'title': item['label'],
+                  'completed': item['isChecked'],
+                })
+            .toList();
+
+        final checklistResponse =
+            await supabase.from('checklist').insert(checklistItems).select();
+
+        if (checklistResponse.isEmpty) {
+          throw Exception('Failed to insert checklist');
+        }
+
+        final List<Checklist> newChecklist =
+            (checklistResponse as List).map((item) {
+          return Checklist(
+            id: item['id'],
+            taskId: item['task_id'],
+            title: item['title'],
+            completed: item['completed'],
+          );
+        }).toList();
+
+        final newTodo = Todo(
+            id: taskResponse.first['id'],
+            userId: taskResponse.first['user_id'],
+            categoryId: taskResponse.first['category_id'],
+            title: taskResponse.first['title'],
+            description: taskResponse.first['description'],
+            createdAt: DateTime.parse(taskResponse.first['created_at']),
+            updatedAt: DateTime.parse(taskResponse.first['updated_at']),
+            startedAt: DateTime.parse(taskResponse.first['started_at']),
+            endedAt: DateTime.parse(taskResponse.first['ended_at']),
+            completed: taskResponse.first['completed'],
+            checklist: newChecklist);
+
+        state = AsyncData([...?state.value, newTodo]);
+      } catch (e) {
+        print(e);
       }
-
-      final taskId = taskResponse.first['id'];
-      final checklistItems = checklist
-          .map((item) => {
-                'task_id': taskId,
-                'title': item['label'],
-                'completed': item['isChecked'],
-              })
-          .toList();
-
-      final checklistResponse =
-          await supabase.from('checklist').insert(checklistItems).select();
-
-      if (checklistResponse.isEmpty) {
-        throw Exception('Failed to insert checklist');
-      }
-
-      final List<Checklist> newChecklist =
-          (checklistResponse as List).map((item) {
-        return Checklist(
-          id: item['id'],
-          taskId: item['task_id'],
-          title: item['title'],
-          completed: item['completed'],
-        );
-      }).toList();
-
-      final newTodo = Todo(
-          id: taskResponse.first['id'],
-          userId: taskResponse.first['user_id'],
-          categoryId: taskResponse.first['category_id'],
-          title: taskResponse.first['title'],
-          description: taskResponse.first['description'],
-          createdAt: DateTime.parse(taskResponse.first['created_at']),
-          updatedAt: DateTime.parse(taskResponse.first['updated_at']),
-          startedAt: DateTime.parse(taskResponse.first['started_at']),
-          endedAt: DateTime.parse(taskResponse.first['ended_at']),
-          completed: taskResponse.first['completed'],
-          checklist: newChecklist);
-
-      state = AsyncData([...?state.value, newTodo]);
-    } catch (e) {
-      print(e);
     }
   }
 
