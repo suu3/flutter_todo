@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/validators.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,14 +19,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final AuthService _authService = AuthService();
 
-  Future<void> _trySignUp() async {
+  Future<void> _signUp() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      showLoadingDialog(context);
 
       await _authService.signUp(_email, _password);
 
       if (mounted) {
         context.push(routes.signIn);
+
+        hideLoadingDialog(context);
       }
     }
   }
@@ -81,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _trySignUp,
+                onPressed: _signUp,
                 child: const Text('회원가입하기'),
               ),
               TextButton(

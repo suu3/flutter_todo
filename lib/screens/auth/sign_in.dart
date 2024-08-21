@@ -54,7 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 40),
                   Form(
@@ -64,12 +64,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           decoration: const InputDecoration(
                             labelText: '이메일',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                            ),
                           ),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
@@ -86,12 +80,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           decoration: const InputDecoration(
                             labelText: '비밀번호',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                            ),
                           ),
                           obscureText: true,
                           validator: (value) {
@@ -123,7 +111,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 32),
                         TextButton(
                           onPressed: () {
                             context.push(routes.signUp);
@@ -133,6 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             style: TextStyle(color: Colors.black38),
                           ),
                         ),
+                        const SizedBox(height: 10),
                         TextButton(
                           onPressed: () {
                             context.push(routes.resetPassword);
