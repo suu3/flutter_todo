@@ -34,16 +34,18 @@ class AuthService {
         password: password,
       );
 
-      _showSuccessToast("회원가입이 완료되었습니다.");
+      // 이미 가입된 사용자인지 확인
+      if (res.user!.identities!.isEmpty) {
+        throw const AuthException('이미 가입된 이메일입니다.', statusCode: '409');
+      }
+
+      _showSuccessToast("메일이 발송되었습니다. 메일함을 확인해주세요.");
       return res;
     } on AuthException catch (error) {
       String errorMessage = "회원가입 중 오류가 발생했습니다: ${error.message}";
       switch (error.statusCode) {
-        case '400':
-          errorMessage = "잘못된 요청입니다.";
-          break;
         case '409':
-          errorMessage = "이미 존재하는 이메일입니다.";
+          errorMessage = "이미 가입된 이메일입니다.";
           break;
       }
 
