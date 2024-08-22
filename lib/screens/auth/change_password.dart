@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 
@@ -12,17 +13,24 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreennState extends State<ChangePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
 
   Future<void> _changePassword() async {
+    final AuthService authService = AuthService();
     final newPassword = _passwordController.text;
 
-    await _authService.updatePassword(
-      newPassword,
-    );
+    try {
+      await authService.changePassword(
+        newPassword,
+      );
 
-    if (mounted) {
-      context.push(routes.mainEndpoint);
+      if (mounted) {
+        context.push(routes.mainEndpoint);
+        showSuccessToast(context: context, text: "비밀번호가 성공적으로 변경되었습니다.");
+      }
+    } catch (error) {
+      if (mounted) {
+        showErrorToast(context: context, text: "알수없는 오류가 발생했습니다.");
+      }
     }
   }
 

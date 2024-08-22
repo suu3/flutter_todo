@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,22 +17,44 @@ class _SignInScreenState extends State<SignInScreen> {
   final supabase = Supabase.instance.client;
   String _email = '';
   String _password = '';
-  final AuthService _authService = AuthService();
 
   Future<void> _signIn() async {
+    final AuthService authService = AuthService();
     if (!_formKey.currentState!.validate()) return;
 
     _formKey.currentState!.save();
 
-    final AuthResponse res = await _authService.signInWithPassword(
-      _email,
-      _password,
-    );
+    try {
+      final AuthResponse res = await authService.signInWithPassword(
+        _email,
+        _password,
+      );
 
-    final Session? session = res.session;
+      final Session? session = res.session;
 
-    if (session != null && mounted) {
-      context.push(routes.mainEndpoint);
+      if (session != null && mounted) {
+        showSuccessToast(
+          context: context,
+          text: "환영합니다!",
+        );
+        context.push(routes.mainEndpoint);
+      }
+    } catch (error) {
+      if (mounted) {
+        if (error is AuthException &&
+            error.statusCode == '400' &&
+            error.message.contains("Email not confirmed")) {
+          showToast(
+            context: context,
+            text: "이메일 인증을 완료해주세요.",
+          );
+        } else {
+          showErrorToast(
+            context: context,
+            text: "로그인 중 알 수 없는 오류가 발생했습니다.",
+          );
+        }
+      }
     }
   }
 
@@ -54,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 40),
                   Form(
@@ -64,12 +87,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           decoration: const InputDecoration(
                             labelText: '이메일',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                            ),
                           ),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
@@ -86,12 +103,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           decoration: const InputDecoration(
                             labelText: '비밀번호',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                            ),
                           ),
                           obscureText: true,
                           validator: (value) {
@@ -123,7 +134,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 32),
                         TextButton(
                           onPressed: () {
                             context.push(routes.signUp);
@@ -133,6 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             style: TextStyle(color: Colors.black38),
                           ),
                         ),
+                        const SizedBox(height: 10),
                         TextButton(
                           onPressed: () {
                             context.push(routes.resetPassword);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/utils/loading_dialog.dart';
+import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -12,13 +13,30 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final AuthService _authService = AuthService();
 
   Future<void> _resetPassword() async {
+    final AuthService authService = AuthService();
     final email = _emailController.text;
-    await _authService.resetPasswordForEmail(
-      email,
-    );
+
+    showLoadingDialog(context);
+
+    try {
+      await authService.resetPasswordForEmail(
+        email,
+      );
+
+      if (mounted) {
+        showSuccessToast(context: context, text: "비밀번호 재설정 메일을 보냈습니다.");
+      }
+    } catch (error) {
+      if (mounted) {
+        showErrorToast(context: context, text: "알수없는 오류가 발생했습니다.");
+      }
+    } finally {
+      if (mounted) {
+        hideLoadingDialog(context);
+      }
+    }
   }
 
   @override
@@ -45,7 +63,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _resetPassword,
-              child: const Text('재설정 링크 보내기'),
+              child: const Text('비밀번호 재설정 링크 보내기'),
             ),
           ],
         ),
