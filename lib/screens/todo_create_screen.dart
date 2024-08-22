@@ -30,9 +30,8 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   @override
   void initState() {
     super.initState();
-    const userId = 'ad5a4932-19e5-4f97-a4d8-29a6fa0e2c0b';
-    _categoriesFuture =
-        ref.read(categoryListProvider.notifier).getCategories(userId);
+
+    _categoriesFuture = ref.read(categoryListProvider.notifier).getCategories();
   }
 
   void _addChecklistItem() {

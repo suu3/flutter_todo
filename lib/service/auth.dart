@@ -48,4 +48,13 @@ class AuthService {
       UserAttributes(password: newPassword),
     );
   }
+
+  Future<UserResponse> getCurrentUser() async {
+    try {
+      final UserResponse res = await _client.auth.getUser();
+      return res;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }
