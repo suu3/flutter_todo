@@ -35,18 +35,29 @@ class CategorySelectionScreen extends StatelessWidget {
   ];
 
   final List<Map<String, dynamic>> todayTasks = [
-    {'title': 'Sketching', 'completed': 2, 'total': 4, 'color': Colors.green},
     {
-      'title': 'Wireframing',
-      'completed': 1,
-      'total': 2,
-      'color': Colors.purple
+      'title': 'Work',
+      'completed': 2,
+      'total': 4,
+      'color': Colors.red,
     },
     {
-      'title': 'Visual Design',
+      'title': 'Personal',
+      'completed': 1,
+      'total': 2,
+      'color': Colors.green,
+    },
+    {
+      'title': 'Shopping',
       'completed': 4,
       'total': 4,
-      'color': Colors.orange
+      'color': Colors.orange,
+    },
+    {
+      'title': 'Fitness',
+      'completed': 4,
+      'total': 4,
+      'color': Colors.purple,
     },
   ];
 
@@ -79,11 +90,17 @@ class CategorySelectionScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Column(
                     children: todayTasks.map((task) {
-                      return TaskCard(
-                        title: task['title'],
-                        completed: task['completed'],
-                        total: task['total'],
-                        color: task['color'],
+                      return Column(
+                        children: [
+                          TaskCard(
+                            title: task['title'],
+                            completed: task['completed'],
+                            total: task['total'],
+                            color: task['color'],
+                            onPressed: () {},
+                          ),
+                          const SizedBox(height: 8), // TaskCard 사이에 16px의 간격 추가
+                        ],
                       );
                     }).toList(),
                   ),
