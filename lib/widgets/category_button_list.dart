@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
+import 'package:go_router/go_router.dart';
 
 class CategoryButtonList extends StatelessWidget {
   final List<Map<String, dynamic>> categories;
@@ -17,7 +18,10 @@ class CategoryButtonList extends StatelessWidget {
             child: CategoryButton(
               text: category['text'],
               icon: category['icon'],
-              onTap: () {},
+              onTap: () {
+                final categoryId = category['text'] as String;
+                context.push('/todo/$categoryId');
+              },
               backgroundColor: category['backgroundColor'] as Color,
               isSelected: false,
               tasks: category.containsKey('tasks') ? category['tasks'] : null,

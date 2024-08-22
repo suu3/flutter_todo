@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/widgets/category_button_list.dart';
 import 'package:flutter_todo/widgets/task_card.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:flutter_todo/constants/routes.dart' as routes;
 
 class CategorySelectionScreen extends StatelessWidget {
   CategorySelectionScreen({super.key});
@@ -97,9 +100,11 @@ class CategorySelectionScreen extends StatelessWidget {
                             completed: task['completed'],
                             total: task['total'],
                             color: task['color'],
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push('/todo/${task['title']}');
+                            },
                           ),
-                          const SizedBox(height: 8), // TaskCard 사이에 16px의 간격 추가
+                          const SizedBox(height: 8),
                         ],
                       );
                     }).toList(),
@@ -112,7 +117,7 @@ class CategorySelectionScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          context.push(routes.todoCreate);
         },
         backgroundColor: Theme.of(context).colorScheme.secondary,
         child: const Icon(Icons.add),

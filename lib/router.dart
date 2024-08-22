@@ -45,8 +45,11 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const TodoCreateScreen(),
     ),
     GoRoute(
-      path: routes.todoList,
-      builder: (context, state) => const TodoListScreen(),
+      path: '/todo/:categoryId?',
+      builder: (context, state) {
+        final categoryId = state.pathParameters['categoryId'];
+        return TodoListScreen(categoryId: categoryId);
+      },
     ),
 
     //card Routes
@@ -54,13 +57,7 @@ final GoRouter router = GoRouter(
       path: routes.cardSelect,
       builder: (context, state) => CategorySelectionScreen(),
     ),
-    // GoRoute( //이후 카테고리 별 필터링 정보 조회 라우팅
-    //   path: '/category/:id', // :id는 파라미터를 의미
-    //   builder: (context, state) {
-    //     final String categoryId = state.params['id']!;
-    //     return CategoryScreen(id: categoryId);
-    //   },
-    // ),
+
     GoRoute(
       path: routes.cardList,
       builder: (context, state) => const CardListScreen(),
