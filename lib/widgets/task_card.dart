@@ -5,23 +5,27 @@ class TaskCard extends StatelessWidget {
   final int completed;
   final int total;
   final Color color;
+  final VoidCallback onPressed; // 버튼 클릭 시 호출될 콜백 함수
 
   const TaskCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.completed,
     required this.total,
     required this.color,
-  }) : super(key: key);
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(10),
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(16),
+        backgroundColor: color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,20 +35,31 @@ class TaskCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 '$completed Completed',
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
           CircleAvatar(
             backgroundColor: color,
-            child: Text('$total'),
+            child: Text(
+              '$total',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
