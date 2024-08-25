@@ -5,7 +5,12 @@ import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:go_router/go_router.dart';
 
 class TodoListScreen extends ConsumerWidget {
-  const TodoListScreen({super.key});
+  final String? categoryId;
+
+  const TodoListScreen({
+    super.key,
+    required this.categoryId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

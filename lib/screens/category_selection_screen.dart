@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/widgets/category_button_list.dart';
 import 'package:flutter_todo/widgets/task_card.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:flutter_todo/constants/routes.dart' as routes;
 
 class CategorySelectionScreen extends StatelessWidget {
   CategorySelectionScreen({super.key});
@@ -35,18 +38,29 @@ class CategorySelectionScreen extends StatelessWidget {
   ];
 
   final List<Map<String, dynamic>> todayTasks = [
-    {'title': 'Sketching', 'completed': 2, 'total': 4, 'color': Colors.green},
     {
-      'title': 'Wireframing',
-      'completed': 1,
-      'total': 2,
-      'color': Colors.purple
+      'title': 'Work',
+      'completed': 2,
+      'total': 4,
+      'color': Colors.red,
     },
     {
-      'title': 'Visual Design',
+      'title': 'Personal',
+      'completed': 1,
+      'total': 2,
+      'color': Colors.green,
+    },
+    {
+      'title': 'Shopping',
       'completed': 4,
       'total': 4,
-      'color': Colors.orange
+      'color': Colors.orange,
+    },
+    {
+      'title': 'Fitness',
+      'completed': 4,
+      'total': 4,
+      'color': Colors.purple,
     },
   ];
 
@@ -79,11 +93,19 @@ class CategorySelectionScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Column(
                     children: todayTasks.map((task) {
-                      return TaskCard(
-                        title: task['title'],
-                        completed: task['completed'],
-                        total: task['total'],
-                        color: task['color'],
+                      return Column(
+                        children: [
+                          TaskCard(
+                            title: task['title'],
+                            completed: task['completed'],
+                            total: task['total'],
+                            color: task['color'],
+                            onPressed: () {
+                              context.push('/todo/${task['title']}');
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                        ],
                       );
                     }).toList(),
                   ),
@@ -95,7 +117,7 @@ class CategorySelectionScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          context.push(routes.todoCreate);
         },
         backgroundColor: Theme.of(context).colorScheme.secondary,
         child: const Icon(Icons.add),
