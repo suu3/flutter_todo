@@ -17,19 +17,19 @@ class SignUpScreen extends ConsumerStatefulWidget {
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Future<void> _signUp() async {
     final auth = ref.read(authProvider);
 
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
       showLoadingDialog(context);
 
       try {
-        await auth.signUp(_email, _password);
+        await auth.signUp(_emailController.text, _passwordController.text);
 
         if (mounted) {
           showSuccessToast(
@@ -61,6 +61,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -80,35 +88,23 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(labelText: '이메일'),
                 keyboardType: TextInputType.emailAddress,
                 validator: Validators.validateEmail,
-                onSaved: (value) {
-                  _email = value!;
-                },
               ),
               TextFormField(
+                controller: _passwordController,
                 decoration: const InputDecoration(labelText: '비밀번호'),
                 obscureText: true,
                 validator: Validators.validatePassword,
-                onChanged: (value) {
-                  setState(() {
-                    _password = value;
-                  });
-                },
-                onSaved: (value) {
-                  _password = value!;
-                },
               ),
               TextFormField(
+                controller: _confirmPasswordController,
                 decoration: const InputDecoration(labelText: '비밀번호 확인'),
                 obscureText: true,
-                validator: (value) =>
-                    Validators.validateConfirmPassword(value, _password),
-                onChanged: (value) {
-                  setState(() {});
-                },
-                onSaved: (value) {},
+                validator: (value) => Validators.validateConfirmPassword(
+                    value, _passwordController.text),
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 8.0),

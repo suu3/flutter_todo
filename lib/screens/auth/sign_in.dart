@@ -15,20 +15,39 @@ class SignInScreen extends ConsumerStatefulWidget {
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  final supabase = Supabase.instance.client;
-  String _email = '';
-  String _password = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return '이메일을 입력하세요';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력하세요';
+    }
+    return null;
+  }
 
   Future<void> _signIn() async {
-    final auth = ref.read(authProvider);
     if (!_formKey.currentState!.validate()) return;
 
-    _formKey.currentState!.save();
+    final auth = ref.read(authProvider);
 
     try {
       final AuthResponse res = await auth.signInWithPassword(
-        _email,
-        _password,
+        _emailController.text,
+        _passwordController.text,
       );
 
       final Session? session = res.session;
@@ -86,35 +105,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: _emailController,
                           decoration: const InputDecoration(
                             labelText: '이메일',
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '이메일을 입력하세요';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _email = value!;
-                          },
+                          validator: _validateEmail,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
+                          controller: _passwordController,
                           decoration: const InputDecoration(
                             labelText: '비밀번호',
                           ),
                           obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '비밀번호를 입력하세요';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _password = value!;
-                          },
+                          validator: _validatePassword,
                         ),
                         const SizedBox(height: 24),
                         SizedBox(

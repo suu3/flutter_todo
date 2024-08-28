@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/toast.dart';
+import 'package:flutter_todo/utils/validators.dart';
 import 'package:go_router/go_router.dart';
 
 class ResetPasswordScreen extends ConsumerStatefulWidget {
@@ -14,6 +15,7 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
   Future<void> _resetPassword() async {
@@ -55,19 +57,26 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _resetPassword,
-              child: const Text('비밀번호 재설정 링크 보내기'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: Validators.validateEmail,
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _resetPassword,
+                  child: const Text('비밀번호 재설정 링크 보내기'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
