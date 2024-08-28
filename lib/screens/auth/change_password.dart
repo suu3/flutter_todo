@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/providers/auth.dart';
-import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;

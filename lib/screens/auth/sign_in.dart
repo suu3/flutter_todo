@@ -64,7 +64,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         if (error is AuthException &&
             error.statusCode == '400' &&
             error.message.contains("Email not confirmed")) {
-          showToast(
+          showErrorToast(
             context: context,
             text: "이메일 인증을 완료해주세요.",
           );
