@@ -4,6 +4,7 @@ import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -31,7 +32,14 @@ class _ChangePasswordScreennState extends ConsumerState<ChangePasswordScreen> {
       }
     } catch (error) {
       if (mounted) {
-        showErrorToast(context: context, text: "알수없는 오류가 발생했습니다.");
+        if (error is AuthException && error.hashCode == 97716469) {
+          showErrorToast(
+              context: context, text: "새 비밀번호는 이전 비밀번호와 같은 비밀번호로 설정할 수 없습니다.");
+        } else if (error.hashCode == 406998593) {
+          showErrorToast(context: context, text: "비밀번호는 6자 이상으로 설정해주세요.");
+        } else {
+          showErrorToast(context: context, text: "알수없는 오류가 발생했습니다.");
+        }
       }
     }
   }

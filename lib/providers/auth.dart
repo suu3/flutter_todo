@@ -30,7 +30,7 @@ class Auth {
     return await _authService.resetPasswordForEmail(email);
   }
 
-  Future<void> changePassword(String newPassword) async {
+  Future<UserResponse> changePassword(String newPassword) async {
     return await _authService.changePassword(newPassword);
   }
 

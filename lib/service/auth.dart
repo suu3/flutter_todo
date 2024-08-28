@@ -43,10 +43,12 @@ class AuthService {
     );
   }
 
-  Future<void> changePassword(String newPassword) async {
-    await _client.auth.updateUser(
+  Future<UserResponse> changePassword(String newPassword) async {
+    final UserResponse res = await _client.auth.updateUser(
       UserAttributes(password: newPassword),
     );
+
+    return res;
   }
 
   Future<UserResponse> getCurrentUser() async {
