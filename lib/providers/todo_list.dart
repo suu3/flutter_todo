@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:flutter_todo/models/todo.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_todo/service/auth.dart';
 
 part 'todo_list.g.dart';
 
 @riverpod
 class TodoList extends _$TodoList {
-  final AuthService _authService = AuthService();
+  late final Auth auth;
+
   @override
   Future<List<Todo>> build() async {
     return await getTodos() ?? [];
@@ -16,7 +17,8 @@ class TodoList extends _$TodoList {
 
   Future<List<Todo>?> getTodos() async {
     final supabase = Supabase.instance.client;
-    final currentUser = await _authService.getCurrentUser();
+    auth = ref.read(authProvider);
+    final currentUser = await auth.getCurrentUser();
     if (currentUser.user == null) {
       return null;
     } else {
@@ -64,7 +66,8 @@ class TodoList extends _$TodoList {
     List<Map<String, dynamic>> checklist,
   ) async {
     final supabase = Supabase.instance.client;
-    final currentUser = await _authService.getCurrentUser();
+    auth = ref.read(authProvider);
+    final currentUser = await auth.getCurrentUser();
     if (currentUser.user == null) {
       return;
     } else {

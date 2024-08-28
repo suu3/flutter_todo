@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final supabase = Supabase.instance.client;
   String _email = '';
   String _password = '';
 
   Future<void> _signIn() async {
-    final AuthService authService = AuthService();
+    final auth = ref.read(authProvider);
     if (!_formKey.currentState!.validate()) return;
 
     _formKey.currentState!.save();
 
     try {
-      final AuthResponse res = await authService.signInWithPassword(
+      final AuthResponse res = await auth.signInWithPassword(
         _email,
         _password,
       );

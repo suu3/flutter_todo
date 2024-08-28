@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 
-class ResetPasswordScreen extends StatefulWidget {
+class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   Future<void> _resetPassword() async {
-    final AuthService authService = AuthService();
+    final auth = ref.read(authProvider);
     final email = _emailController.text;
 
     showLoadingDialog(context);
 
     try {
-      await authService.resetPasswordForEmail(
+      await auth.resetPasswordForEmail(
         email,
       );
 

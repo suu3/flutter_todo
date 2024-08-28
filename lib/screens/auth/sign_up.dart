@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:flutter_todo/utils/validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
 
   Future<void> _signUp() async {
-    final AuthService authService = AuthService();
+    final auth = ref.read(authProvider);
+
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       showLoadingDialog(context);
 
       try {
-        await authService.signUp(_email, _password);
+        await auth.signUp(_email, _password);
 
         if (mounted) {
           showSuccessToast(
@@ -75,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 decoration: const InputDecoration(labelText: '이메일'),

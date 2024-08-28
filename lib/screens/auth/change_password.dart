@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 
-class ChangePasswordScreen extends StatefulWidget {
+class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() => _ChangePasswordScreennState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreennState();
 }
 
-class _ChangePasswordScreennState extends State<ChangePasswordScreen> {
+class _ChangePasswordScreennState extends ConsumerState<ChangePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _changePassword() async {
-    final AuthService authService = AuthService();
+    final auth = ref.read(authProvider);
     final newPassword = _passwordController.text;
 
     try {
-      await authService.changePassword(
+      await auth.changePassword(
         newPassword,
       );
 
