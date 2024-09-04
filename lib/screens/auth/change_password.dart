@@ -57,10 +57,35 @@ class _ChangePasswordScreennState extends ConsumerState<ChangePasswordScreen> {
               decoration: const InputDecoration(labelText: '새 비밀번호'),
               obscureText: true,
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _changePassword,
-              child: const Text('비밀번호 변경하기'),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                '* 비밀번호는 6자 이상으로 설정해주세요.',
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _changePassword,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 255, 201, 85),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text(
+                  '비밀번호 변경하기',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

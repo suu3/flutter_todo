@@ -128,19 +128,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             onPressed: _signIn,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  const Color.fromARGB(255, 255, 175, 118),
-                              padding: const EdgeInsets.symmetric(vertical: 20),
+                                  const Color.fromARGB(255, 255, 201, 85),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                             child: const Text(
                               '로그인',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
                             context.push(routes.signUp);

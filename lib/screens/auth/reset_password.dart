@@ -68,11 +68,24 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: Validators.validateEmail,
               ),
-              const SizedBox(height: 20),
-              Center(
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _resetPassword,
-                  child: const Text('비밀번호 재설정 링크 보내기'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 201, 85),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    '비밀번호 재설정 링크 보내기',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
             ],

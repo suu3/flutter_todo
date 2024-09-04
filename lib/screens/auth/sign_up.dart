@@ -116,19 +116,36 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Center(
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _signUp,
-                  child: const Text('회원가입하기'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 201, 85),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    '회원가입',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(height: 20),
               Center(
                 child: TextButton(
                   onPressed: () {
                     context.push(routes.resetPassword);
                   },
-                  child: const Text('비밀번호 찾기'),
+                  child: const Text(
+                    '비밀번호 찾기',
+                    style: TextStyle(color: Colors.black38),
+                  ),
                 ),
               ),
             ],
