@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -37,10 +38,10 @@ class AuthService {
   }
 
   Future<void> resetPasswordForEmail(String email) async {
-    await _client.auth.resetPasswordForEmail(
-      email,
-      redirectTo: routes.changePassword, // 인증된 사용자만 접근 가능해야 함
-    );
+    await _client.auth.resetPasswordForEmail(email,
+        redirectTo: kIsWeb
+            ? null
+            : 'io.supabase.fluttertodo://callback${routes.changePassword}/');
   }
 
   Future<UserResponse> changePassword(String newPassword) async {
