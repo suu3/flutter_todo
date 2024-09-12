@@ -1,33 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  final supabase = Supabase.instance.client;
-  String _email = '';
-  String _password = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return '이메일을 입력하세요';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력하세요';
+    }
+    return null;
+  }
 
   Future<void> _signIn() async {
-    final AuthService authService = AuthService();
     if (!_formKey.currentState!.validate()) return;
 
-    _formKey.currentState!.save();
+    final auth = ref.read(authProvider);
 
     try {
-      final AuthResponse res = await authService.signInWithPassword(
-        _email,
-        _password,
+      final AuthResponse res = await auth.signInWithPassword(
+        _emailController.text,
+        _passwordController.text,
       );
 
       final Session? session = res.session;
@@ -44,7 +64,7 @@ class _SignInScreenState extends State<SignInScreen> {
         if (error is AuthException &&
             error.statusCode == '400' &&
             error.message.contains("Email not confirmed")) {
-          showToast(
+          showErrorToast(
             context: context,
             text: "이메일 인증을 완료해주세요.",
           );
@@ -85,35 +105,21 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: _emailController,
                           decoration: const InputDecoration(
                             labelText: '이메일',
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '이메일을 입력하세요';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _email = value!;
-                          },
+                          validator: _validateEmail,
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
+                          controller: _passwordController,
                           decoration: const InputDecoration(
                             labelText: '비밀번호',
                           ),
                           obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return '비밀번호를 입력하세요';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _password = value!;
-                          },
+                          validator: _validatePassword,
                         ),
                         const SizedBox(height: 24),
                         SizedBox(
@@ -122,19 +128,21 @@ class _SignInScreenState extends State<SignInScreen> {
                             onPressed: _signIn,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  const Color.fromARGB(255, 255, 175, 118),
-                              padding: const EdgeInsets.symmetric(vertical: 20),
+                                  const Color.fromARGB(255, 255, 201, 85),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
                             child: const Text(
                               '로그인',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 20),
                         TextButton(
                           onPressed: () {
                             context.push(routes.signUp);

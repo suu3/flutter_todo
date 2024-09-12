@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:flutter_todo/utils/validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Future<void> _signUp() async {
-    final AuthService authService = AuthService();
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    final auth = ref.read(authProvider);
 
+    if (_formKey.currentState!.validate()) {
       showLoadingDialog(context);
 
       try {
-        await authService.signUp(_email, _password);
+        await auth.signUp(_emailController.text, _passwordController.text);
 
         if (mounted) {
           showSuccessToast(
@@ -59,6 +61,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -75,38 +85,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
+                controller: _emailController,
                 decoration: const InputDecoration(labelText: '이메일'),
                 keyboardType: TextInputType.emailAddress,
                 validator: Validators.validateEmail,
-                onSaved: (value) {
-                  _email = value!;
-                },
               ),
               TextFormField(
+                controller: _passwordController,
                 decoration: const InputDecoration(labelText: '비밀번호'),
                 obscureText: true,
                 validator: Validators.validatePassword,
-                onChanged: (value) {
-                  setState(() {
-                    _password = value;
-                  });
-                },
-                onSaved: (value) {
-                  _password = value!;
-                },
               ),
               TextFormField(
+                controller: _confirmPasswordController,
                 decoration: const InputDecoration(labelText: '비밀번호 확인'),
                 obscureText: true,
-                validator: (value) =>
-                    Validators.validateConfirmPassword(value, _password),
-                onChanged: (value) {
-                  setState(() {});
-                },
-                onSaved: (value) {},
+                validator: (value) => Validators.validateConfirmPassword(
+                    value, _passwordController.text),
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 8.0),
@@ -118,19 +116,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Center(
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _signUp,
-                  child: const Text('회원가입하기'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 201, 85),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    '회원가입',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(height: 20),
               Center(
                 child: TextButton(
                   onPressed: () {
                     context.push(routes.resetPassword);
                   },
-                  child: const Text('비밀번호 찾기'),
+                  child: const Text(
+                    '비밀번호 찾기',
+                    style: TextStyle(color: Colors.black38),
+                  ),
                 ),
               ),
             ],

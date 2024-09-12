@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:flutter_todo/models/category.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/service/auth.dart';
 
 part 'category_list.g.dart';
 
 @riverpod
 class CategoryList extends _$CategoryList {
-  final AuthService _authService = AuthService();
+  late final Auth auth;
   @override
   Future<List<Category>> build() async {
     // 초기 상태에서 빈 리스트를 반환
@@ -18,7 +18,8 @@ class CategoryList extends _$CategoryList {
 
   Future<List<Category>?> getCategories() async {
     final supabase = Supabase.instance.client;
-    final currentUser = await _authService.getCurrentUser();
+    auth = ref.read(authProvider);
+    final currentUser = await auth.getCurrentUser();
     if (currentUser.user == null) {
       return null;
     } else {
@@ -58,7 +59,8 @@ class CategoryList extends _$CategoryList {
 
   Future<void> addCategory(String title, String? color, String? icon) async {
     final supabase = Supabase.instance.client;
-    final currentUser = await _authService.getCurrentUser();
+    auth = ref.read(authProvider);
+    final currentUser = await auth.getCurrentUser();
     if (currentUser.user == null) {
       return;
     } else {

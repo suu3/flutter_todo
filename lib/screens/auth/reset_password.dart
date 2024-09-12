@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/service/auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/utils/loading_dialog.dart';
 import 'package:flutter_todo/utils/toast.dart';
+import 'package:flutter_todo/utils/validators.dart';
 import 'package:go_router/go_router.dart';
 
-class ResetPasswordScreen extends StatefulWidget {
+class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
   Future<void> _resetPassword() async {
-    final AuthService authService = AuthService();
+    final auth = ref.read(authProvider);
     final email = _emailController.text;
 
     showLoadingDialog(context);
 
     try {
-      await authService.resetPasswordForEmail(
+      await auth.resetPasswordForEmail(
         email,
       );
 
@@ -53,19 +57,39 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _resetPassword,
-              child: const Text('비밀번호 재설정 링크 보내기'),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+                validator: Validators.validateEmail,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _resetPassword,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 201, 85),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    '비밀번호 재설정 링크 보내기',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

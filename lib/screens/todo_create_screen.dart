@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_todo/models/category.dart';
+import 'package:flutter_todo/providers/auth.dart';
 import 'package:flutter_todo/providers/todo_list.dart';
-import 'package:flutter_todo/service/auth.dart';
 import 'package:flutter_todo/utils/toast.dart';
 import 'package:flutter_todo/widgets/category_button.dart';
 import 'package:flutter_todo/widgets/date_picker.dart';
@@ -88,8 +88,8 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              final AuthService authService = AuthService();
-              await authService.signOut();
+              final auth = ref.read(authProvider);
+              await auth.signOut();
 
               if (context.mounted) {
                 showSuccessToast(context: context, text: '로그아웃 성공');
