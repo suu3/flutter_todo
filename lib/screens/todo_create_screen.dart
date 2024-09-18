@@ -214,20 +214,39 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Select Due Date',
+                      const Text('Todo Information',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           )),
                       TextField(
                         controller: _titleController,
-                        decoration: const InputDecoration(labelText: 'Title'),
+                        maxLength: 20,
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Title',
+                          counterText: '${_titleController.text.length}/20',
+                        ),
+                        onChanged: (text) {
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _descriptionController,
-                        decoration:
-                            const InputDecoration(labelText: 'Description'),
+                        maxLength: 25,
+                        onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                          counterText:
+                              '${_descriptionController.text.length}/25',
+                        ),
+                        onChanged: (text) {
+                          setState(() {});
+                        },
                       ),
                     ],
                   ),

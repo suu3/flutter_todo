@@ -106,6 +106,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       children: [
                         TextFormField(
                           controller: _emailController,
+                          textInputAction: TextInputAction.next,
+                          onEditingComplete: () {
+                            FocusScope.of(context).nextFocus();
+                          },
                           decoration: const InputDecoration(
                             labelText: '이메일',
                           ),
@@ -115,6 +119,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         const SizedBox(height: 16),
                         TextFormField(
                           controller: _passwordController,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => FocusScope.of(context)
+                              .unfocus(), // 포커스를 해제하거나 제출 완료 처리
                           decoration: const InputDecoration(
                             labelText: '비밀번호',
                           ),
