@@ -1,6 +1,5 @@
-import 'package:flutter_todo/screens/card_detail_screen.dart';
-import 'package:flutter_todo/screens/card_list_screen.dart';
 import 'package:flutter_todo/screens/category_selection_screen.dart';
+import 'package:flutter_todo/screens/todo_detail_screen.dart';
 import 'package:flutter_todo/screens/todo_list_screen.dart';
 
 import 'package:go_router/go_router.dart';
@@ -42,41 +41,27 @@ final GoRouter router = GoRouter(
       path: routes.todoCreate,
       builder: (context, state) => const TodoCreateScreen(),
     ),
+
     GoRoute(
-      path: '/todo/:categoryId?',
+      path: '/todo/detail/:id',
       builder: (context, state) {
-        final categoryId = state.pathParameters['categoryId'];
+        final todoId = state.pathParameters['id']?.toLowerCase();
+        return TodoDetailScreen(todoId: todoId!);
+      },
+    ),
+
+    GoRoute(
+      path: '/todo/:categoryId',
+      builder: (context, state) {
+        final categoryId = state.pathParameters['categoryId']?.toLowerCase();
         return TodoListScreen(categoryId: categoryId);
       },
     ),
 
-    //card Routes
+    //category Routes
     GoRoute(
-      path: routes.cardSelect,
+      path: routes.categorySelect,
       builder: (context, state) => CategorySelectionScreen(),
-    ),
-
-    GoRoute(
-      path: routes.cardList,
-      builder: (context, state) => const CardListScreen(),
-    ),
-    // GoRoute(
-    //   path: '${routes.cardDetail}/:id',
-    //   builder: (context, state) {
-    //     final todoId = state.pathParameters['id']!;
-    //     return const CardDetailScreen(
-    //       todoId: '1',
-    //     );
-    //   },
-    // ),
-    GoRoute(
-      path: '${routes.cardDetail}/:id',
-      builder: (context, state) {
-        final todoId = state.pathParameters['id']!;
-        return CardDetailScreen(
-          todoId: todoId,
-        );
-      },
     ),
   ],
 );

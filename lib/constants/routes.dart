@@ -9,12 +9,11 @@ const String changePassword = '$authRoute/change-password';
 const todoRoute = '/todo';
 const todoCreate = '$todoRoute/create';
 const todoList = '$todoRoute/list';
+const todoDetail = '$todoRoute/detail';
 
-//card
-const cardRoute = '/card';
-const cardSelect = '$cardRoute/select';
-const cardList = '$cardRoute/list';
-const cardDetail = '$cardRoute/detail';
+//category
+const categoryRoute = '/card';
+const categorySelect = '$categoryRoute/select';
 
 const List<String> publicRoutes = [
   signIn,
@@ -22,4 +21,4 @@ const List<String> publicRoutes = [
   resetPassword,
 ];
 
-const String mainEndpoint = todoCreate;
+const String mainEndpoint = categorySelect;
