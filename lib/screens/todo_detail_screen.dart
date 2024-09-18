@@ -7,16 +7,16 @@ import 'package:flutter_todo/widgets/todo_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 
-class CardDetailScreen extends ConsumerStatefulWidget {
+class TodoDetailScreen extends ConsumerStatefulWidget {
   final String todoId;
   final int number = 1;
 
-  const CardDetailScreen({super.key, required this.todoId});
+  const TodoDetailScreen({super.key, required this.todoId});
   @override
-  CardDetailScreenState createState() => CardDetailScreenState();
+  TodoDetailScreenState createState() => TodoDetailScreenState();
 }
 
-class CardDetailScreenState extends ConsumerState<CardDetailScreen> {
+class TodoDetailScreenState extends ConsumerState<TodoDetailScreen> {
   Future<void> _removeTodo() async {
     final todoListNotifier = ref.read(todoListProvider.notifier);
     await todoListNotifier.removeTodo(widget.todoId);
@@ -51,7 +51,7 @@ class CardDetailScreenState extends ConsumerState<CardDetailScreen> {
               child: TodoCard(
                 index: widget.number,
                 title: todo!.title,
-                date: todo.createdAt.toString(),
+                date: todo.createdAt,
                 category: "work",
               ),
             ),
