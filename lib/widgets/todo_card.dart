@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Date formatting을 위해 intl 패키지를 사용
 
 const double borderRadiusValue = 30.0;
 
 class TodoCard extends StatelessWidget {
   final int index;
   final String title;
-  final String date;
+  final DateTime date; // DateTime 타입으로 변경
   final String category;
 
   const TodoCard({
     super.key,
     required this.index,
     required this.title,
-    required this.date,
+    required this.date, // DateTime 타입
     required this.category,
   });
+
+  // 날짜를 원하는 형식으로 포맷팅
+  String _formatDate(DateTime date) {
+    return DateFormat('dd MMM yyyy').format(date); // '20 Apr 2030' 형식으로 변환
+  }
 
   List<Color> _getGradientColors(String category) {
     switch (category.toLowerCase()) {
@@ -48,7 +54,7 @@ class TodoCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // 추가된 부분
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -61,7 +67,6 @@ class TodoCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Flexible(
-              // 수정된 부분
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -76,7 +81,7 @@ class TodoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  date,
+                  _formatDate(date), // DateTime을 형식화된 문자열로 출력
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.w100,

@@ -10,6 +10,39 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/constants/routes.dart' as routes;
 import 'package:flutter_todo/providers/category_list.dart';
 
+List<Category> generateMockCategories() {
+  return [
+    Category(
+      id: '1',
+      userId: '100',
+      title: 'Work',
+      color: Category.getColorFromString('red'),
+      icon: Category.getIconDataFromString('work'),
+    ),
+    Category(
+      id: '2',
+      userId: '101',
+      title: 'Shopping',
+      color: Category.getColorFromString('green'),
+      icon: Category.getIconDataFromString('shopping_cart'),
+    ),
+    Category(
+      id: '3',
+      userId: '102',
+      title: 'Fitness',
+      color: Category.getColorFromString('orange'),
+      icon: Category.getIconDataFromString('fitness_center'),
+    ),
+    Category(
+      id: '4',
+      userId: '103',
+      title: 'Personal',
+      color: Category.getColorFromString('purple'),
+      icon: Category.getIconDataFromString('person'),
+    ),
+  ];
+}
+
 class TodoCreateScreen extends ConsumerStatefulWidget {
   const TodoCreateScreen({super.key});
 
@@ -31,7 +64,19 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
   void initState() {
     super.initState();
 
-    _categoriesFuture = ref.read(categoryListProvider.notifier).getCategories();
+    // initState에서 Future 설정
+    _categoriesFuture = ref
+        .read(categoryListProvider.notifier)
+        .getCategories()
+        .catchError((error) {
+      // 오류가 발생할 경우 모킹 데이터 반환
+      return generateMockCategories();
+    }).then((categories) {
+      // 만약 데이터가 없거나 비어 있다면 모킹 데이터를 설정
+      return categories?.isEmpty ?? true
+          ? generateMockCategories()
+          : categories;
+    });
   }
 
   void _addChecklistItem() {
@@ -169,20 +214,39 @@ class TodoCreateScreenState extends ConsumerState<TodoCreateScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Select Due Date',
+                      const Text('Todo Information',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           )),
                       TextField(
                         controller: _titleController,
-                        decoration: const InputDecoration(labelText: 'Title'),
+                        maxLength: 20,
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () {
+                          FocusScope.of(context).nextFocus();
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Title',
+                          counterText: '${_titleController.text.length}/20',
+                        ),
+                        onChanged: (text) {
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _descriptionController,
-                        decoration:
-                            const InputDecoration(labelText: 'Description'),
+                        maxLength: 25,
+                        onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                          counterText:
+                              '${_descriptionController.text.length}/25',
+                        ),
+                        onChanged: (text) {
+                          setState(() {});
+                        },
                       ),
                     ],
                   ),

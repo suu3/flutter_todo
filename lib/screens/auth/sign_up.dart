@@ -89,18 +89,30 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             children: [
               TextFormField(
                 controller: _emailController,
+                autofocus: true,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () {
+                  FocusScope.of(context).nextFocus();
+                },
                 decoration: const InputDecoration(labelText: '이메일'),
                 keyboardType: TextInputType.emailAddress,
                 validator: Validators.validateEmail,
               ),
               TextFormField(
                 controller: _passwordController,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () {
+                  FocusScope.of(context).nextFocus();
+                },
                 decoration: const InputDecoration(labelText: '비밀번호'),
                 obscureText: true,
                 validator: Validators.validatePassword,
               ),
               TextFormField(
                 controller: _confirmPasswordController,
+                textInputAction: TextInputAction.done, // 마지막 필드에서는 done 사용
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).unfocus(), // 포커스를 해제하거나 제출 완료 처리
                 decoration: const InputDecoration(labelText: '비밀번호 확인'),
                 obscureText: true,
                 validator: (value) => Validators.validateConfirmPassword(
