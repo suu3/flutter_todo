@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_todo/screens/category_selection_screen.dart';
 import 'package:flutter_todo/screens/todo_detail_screen.dart';
 import 'package:flutter_todo/screens/todo_list_screen.dart';
@@ -17,8 +20,32 @@ final GoRouter router = GoRouter(
   //   final session = Supabase.instance.client.auth.currentSession;
   //   return auth.redirectBySession(state.uri.toString(), session);
   // },
+  errorBuilder: ((context, state) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Page Not Found',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  context.go(routes.signIn);
+                },
+                child: const Text('Go to Home'),
+              ),
+            ],
+          ),
+        ),
+      )),
   routes: [
     //auth Routes
+    GoRoute(
+      path: routes.signIn,
+      builder: (context, state) => const SignInScreen(),
+    ),
     GoRoute(
       path: routes.signIn,
       builder: (context, state) => const SignInScreen(),
