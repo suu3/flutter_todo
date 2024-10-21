@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_todo/providers/auth.dart';
+import 'package:flutter_todo/utils/toast.dart';
 import 'package:flutter_todo/widgets/category_button_list.dart';
 import 'package:flutter_todo/widgets/task_card.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:flutter_todo/constants/routes.dart' as routes;
 
-class CategorySelectionScreen extends StatelessWidget {
-  CategorySelectionScreen({super.key});
+class CategorySelectionScreen extends ConsumerStatefulWidget {
+  const CategorySelectionScreen({super.key});
 
-  // 'const'를 제거하고 'final'로 변경
+  @override
+  CategorySelectionScreenState createState() => CategorySelectionScreenState();
+}
+
+class CategorySelectionScreenState
+    extends ConsumerState<CategorySelectionScreen> {
   final List<Map<String, dynamic>> categories = [
     {
       'text': 'Work',
@@ -70,6 +78,20 @@ class CategorySelectionScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('Category List'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final auth = ref.read(authProvider);
+              await auth.signOut();
+
+              if (context.mounted) {
+                showSuccessToast(context: context, text: '로그아웃 성공');
+                context.push(routes.signIn);
+              }
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -39,9 +39,8 @@ class AuthService {
 
   Future<void> resetPasswordForEmail(String email) async {
     await _client.auth.resetPasswordForEmail(email,
-        redirectTo: kIsWeb
-            ? null
-            : 'io.supabase.fluttertodo://callback${routes.changePassword}/');
+        redirectTo:
+            kIsWeb ? null : 'passionbirdtodo:/${routes.changePassword}');
   }
 
   Future<UserResponse> changePassword(String newPassword) async {

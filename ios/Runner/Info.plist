@@ -57,7 +57,7 @@
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>io.supabase.fluttertodo</string>
+					<string>passionbirdtodo</string>
 				</array>
 				</dict>
 			</array>
